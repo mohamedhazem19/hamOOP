@@ -1,7 +1,6 @@
 // Owner: Belal Mohamed Ahmed (GUI general)
-// TODO(Belal): animate(element, 'fadeUp' | 'pop' | 'float' | 'grow') using classes from css/animations.css
-export default function animate(element, name) {
-  element.classList.remove(name);
-  void element.offsetWidth; // restart the animation
-  element.classList.add(name);
-}
+// Not built yet – Belal: write this function. See your task PDF.
+//
+// TODO(Belal):
+//  - export default function animate(element, name) – name = 'fadeUp' | 'pop' | 'float' | 'grow'
+//  - restart the CSS animation from css/animations.css

@@ -1,16 +1,9 @@
-// Owner: Loay Hossam (Patient Module – reports)
+// Owner: Loay Hossam (Patient Module)
+// Not built yet – Loay: write this class. See your task PDF and the README "Contracts" table.
+//
+// TODO(Loay):
+//  - constructor({ id, type, name, finding, imagePath }); type = xray | dexa | ecg | lab
+//  - get typeLabel() -> "X-ray (bone scan)", "Bone density scan", "ECG", "Lab test"
+
 export default class Scan {
-  static TYPES = Object.freeze({ xray: 'X-ray (bone scan)', dexa: 'Bone density scan', ecg: 'ECG', lab: 'Lab test' });
-
-  constructor({ id, type, name, finding = '', imagePath = '' }) {
-    this.id = id;
-    this.type = type;           // 'xray' | 'dexa' | 'ecg' | 'lab'
-    this.name = name;
-    this.finding = finding;
-    this.imagePath = imagePath;
-  }
-
-  get typeLabel() {
-    return Scan.TYPES[this.type] || 'Scan';
-  }
 }

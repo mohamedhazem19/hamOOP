@@ -1,12 +1,9 @@
 // Owner: Rodina Elsayed Mohamed (Doctor Registration)
-// Composition: a Department owns its list of doctors.
-export default class Department {
-  constructor(name) {
-    this.name = name;
-    this.doctors = [];
-  }
+// Not built yet – Rodina: write this class. See your task PDF and the README "Contracts" table.
+//
+// TODO(Rodina):
+//  - constructor(name); doctors = []
+//  - addDoctor(doctor)  (composition: a department owns its doctors)
 
-  addDoctor(doctor) {
-    this.doctors.push(doctor);
-  }
+export default class Department {
 }

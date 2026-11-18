@@ -1,19 +1,9 @@
-// Owner: Loay Hossam (Patient Module – reports)
-// Week-1 placeholder from the Team Leader. TODO(Loay Hossam): build the real screen – see your task PDF.
-import BaseView, { esc } from './common/BaseView.js';
-import { isoDate } from '../store/sampleData.js';
+// Owner: Loay Hossam (Patient Module)
+// Not built yet – Loay: write this class. See your task PDF and the README "Contracts" table.
+//
+// TODO(Loay):
+//  - extends BaseView (render + bind)
+//  - My Reports: list of reports, report details, scans with ScanViewer
 
-export default class ReportsView extends BaseView {
-  render() {
-    const today = isoDate(0);
-    void today; void esc;
-    return this.placeholder({
-      title: 'My Reports',
-      owners: 'Loay Hossam (Patient Module – reports)',
-      pdf: 'Loay task PDF',
-      checks: [
-        `My reports: ${this.c.reports.forPatient(this.ctx.session.user?.id).map((r) => esc(r.title)).join(', ') || 'none'}`,
-      ],
-    });
-  }
+export default class ReportsView {
 }

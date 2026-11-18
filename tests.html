@@ -6,13 +6,13 @@
   <link rel="icon" href="assets/images/logo.svg" type="image/svg+xml">
   <style>
     body { font-family: system-ui, sans-serif; margin: 32px; color: #0F1F1A; }
-    li { margin: 4px 0; } .pass { color: #15803D; } .fail { color: #B91C1C; font-weight: 700; }
+    li { margin: 4px 0; } .pass { color: #15803D; } .fail { color: #B91C1C; font-weight: 700; } .wait { color: #92400E; }
     #summary { font-size: 18px; font-weight: 700; }
   </style>
 </head>
 <body>
   <h1>Contract checks</h1>
-  <p>Open this page with Live Server. Every teammate adds checks for their own methods in <code>js/dev/checks.js</code>.</p>
+  <p>Open this page with Live Server. Green = passed, red = failed, yellow = waiting for a teammate's code. Every teammate adds checks for their own methods in <code>js/dev/checks.js</code>.</p>
   <p id="summary">Running…</p>
   <ul id="results"></ul>
   <script type="module" src="js/dev/checks.js"></script>

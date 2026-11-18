@@ -1,135 +1,136 @@
-// Owner: Mohamed Hazem (Team Leader) – every member adds checks for their own controller below.
-// Run: open tests.html with Live Server. Green = pass, red = fail.
+// Owner: Mohamed Hazem (Team Leader)
+// Run: open tests.html with Live Server. Green = pass, red = fail, yellow = waiting for a teammate.
+// These checks cover Mohamed's code only (store, sign in, router).
+// Each teammate adds a section for their own controller at the bottom.
 
 import DataStore from '../store/DataStore.js';
-import { createSampleData, isoDate } from '../store/sampleData.js';
+import { createSampleData } from '../store/sampleData.js';
 import session from '../session.js';
 import Router from '../router.js';
 import AuthController from '../controllers/AuthController.js';
 import PatientController from '../controllers/PatientController.js';
-import DoctorController from '../controllers/DoctorController.js';
-import AppointmentController from '../controllers/AppointmentController.js';
-import ReportController from '../controllers/ReportController.js';
-import StatsController from '../controllers/StatsController.js';
-import SlotUnavailableError from '../errors/SlotUnavailableError.js';
-import InvalidInputError from '../errors/InvalidInputError.js';
 
 const results = [];
+class Waiting extends Error {}
 function check(name, fn) {
-  try { fn(); results.push({ name, ok: true }); }
-  catch (e) { results.push({ name, ok: false, msg: e.message }); }
+  try { fn(); results.push({ name, state: 'pass' }); }
+  catch (e) { results.push({ name, state: e instanceof Waiting ? 'wait' : 'fail', msg: e.message }); }
 }
 function assert(cond, msg = 'expected true') { if (!cond) throw new Error(msg); }
-function throws(fn, ErrorClass, msg = `expected ${ErrorClass.name}`) {
-  try { fn(); } catch (e) { if (e instanceof ErrorClass) return; throw new Error(`${msg}, got ${e.name}: ${e.message}`); }
-  throw new Error(`${msg}, but nothing was thrown`);
+function needs(ok, who) { if (!ok) throw new Waiting(`waiting for ${who}`); }
+function throwsError(fn, msg = 'expected an error') {
+  try { fn(); } catch { return; }
+  throw new Error(msg);
 }
 
 function fresh() {
   DataStore.instance.load(createSampleData());
   session.end();
   const patients = new PatientController();
-  const appointments = new AppointmentController();
-  return { store: DataStore.instance, patients, appointments, auth: new AuthController(patients),
-    doctors: new DoctorController(appointments), reports: new ReportController(), stats: new StatsController() };
+  return { store: DataStore.instance, patients, auth: new AuthController(patients) };
 }
 
-// ---------- Mohamed: store, auth, router ----------
-check('DataStore is a singleton', () => {
+// ---------- Mohamed: DataStore ----------
+check('DataStore is a singleton (new DataStore() is blocked)', () => {
   assert(DataStore.instance === DataStore.instance);
   let blocked = false; try { new DataStore(); } catch { blocked = true; }
   assert(blocked, 'new DataStore() should be blocked');
 });
-check('Sample data loads into model objects', () => {
+check('Sample data loads (4 doctors, 4 patients, 11 appointments, 2 reports)', () => {
   const { store } = fresh();
-  assert(store.doctors.length === 4 && store.patients.length === 4, 'counts');
-  assert(store.doctors[0].calculateFee() === 400, 'Dr. Ahmed fee');
+  assert(store.doctors.length === 4 && store.patients.length === 4, 'doctors / patients');
+  assert(store.appointments.length === 11 && store.reports.length === 2, 'appointments / reports');
 });
+check('nextId() gives new ids that never repeat', () => {
+  const { store } = fresh();
+  const a = store.nextId('p'), b = store.nextId('p');
+  assert(a !== b && a.startsWith('p'), `${a} ${b}`);
+});
+
+// ---------- Mohamed: AuthController + Session ----------
 check('ADMIN / 1234 signs in as admin (any letter case)', () => {
   const { auth } = fresh();
   auth.signIn('admin', '1234');
   assert(session.isAdmin && session.role === 'admin');
 });
-check('Wrong admin password is refused', () => { const { auth } = fresh(); throws(() => auth.signIn('ADMIN', '0000'), InvalidInputError); });
-check('Patient signs in with phone + password', () => {
+check('Wrong admin password is refused', () => {
   const { auth } = fresh();
+  throwsError(() => auth.signIn('ADMIN', '0000'));
+  assert(!session.isSignedIn, 'nobody signed in');
+});
+check('Empty phone or password is refused', () => {
+  const { auth } = fresh();
+  throwsError(() => auth.signIn('', '1234'));
+  throwsError(() => auth.signIn('ADMIN', ''));
+});
+check('Sign out ends the session', () => {
+  const { auth } = fresh();
+  auth.signIn('ADMIN', '1234'); auth.signOut();
+  assert(!session.isSignedIn && session.role === 'guest');
+});
+check('Patient signs in with phone + password', () => {
+  const { auth, patients } = fresh();
+  needs(typeof patients.findByPhone === 'function', 'Lojaine: PatientController.findByPhone()');
   const p = auth.signIn('01012345678', '1234');
   assert(p.name === 'Youssef Ali' && session.isPatient);
 });
 check('Unknown phone gets the same message as a wrong password', () => {
-  const { auth } = fresh();
+  const { auth, patients } = fresh();
+  needs(typeof patients.findByPhone === 'function', 'Lojaine: PatientController.findByPhone()');
   let a = '', b = '';
   try { auth.signIn('01099999999', '1234'); } catch (e) { a = e.message; }
   try { auth.signIn('01012345678', 'nope'); } catch (e) { b = e.message; }
   assert(a && a === b, `"${a}" vs "${b}"`);
 });
+check('Sign up refuses short or different passwords', () => {
+  const { auth } = fresh();
+  throwsError(() => auth.signUp({ name: 'Sara Ahmed', phone: '01122334455', age: 29, password: 'ab', confirmPassword: 'ab' }));
+  throwsError(() => auth.signUp({ name: 'Sara Ahmed', phone: '01122334455', age: 29, password: 'abcd', confirmPassword: 'abce' }));
+});
 check('Sign up creates a patient and signs in', () => {
-  const { auth, store } = fresh();
+  const { auth, store, patients } = fresh();
+  needs(typeof patients.register === 'function', 'Lojaine: PatientController.register()');
   auth.signUp({ name: 'Sara Ahmed', phone: '01122334455', age: '29', gender: 'Female', password: 'abcd', confirmPassword: 'abcd' });
   assert(store.patients.length === 5 && session.user.name === 'Sara Ahmed');
 });
-check('Sign up refuses a phone that is already used', () => {
-  const { auth } = fresh();
-  throws(() => auth.signUp({ name: 'Copy Cat', phone: '01012345678', age: 20, password: 'abcd', confirmPassword: 'abcd' }), InvalidInputError);
+
+// ---------- Mohamed: Router ----------
+check('Router: who may open which page', () => {
+  assert(!Router.canAccess({ access: ['admin'] }, 'patient'), 'patient blocked from admin page');
+  assert(Router.canAccess({ access: ['patient', 'admin'] }, 'patient'), 'shared page');
+  assert(Router.canAccess({ access: ['public'] }, 'guest'), 'public page');
+  assert(!Router.canAccess({ access: ['patient'] }, 'guest'), 'guest blocked from patient page');
 });
-check('Sign up refuses passwords that do not match', () => {
-  const { auth } = fresh();
-  throws(() => auth.signUp({ name: 'Sara Ahmed', phone: '01122334455', age: 20, password: 'abcd', confirmPassword: 'abce' }), InvalidInputError);
+check('Router: where blocked people are sent', () => {
+  assert(Router.fallbackFor('admin') === 'dashboard');
+  assert(Router.fallbackFor('patient') === 'my-appointments');
+  assert(Router.fallbackFor('guest') === 'login');
 });
-check('Router: patients cannot open admin pages', () => {
-  assert(!Router.canAccess({ access: ['admin'] }, 'patient'));
-  assert(Router.canAccess({ access: ['patient', 'admin'] }, 'patient'));
-  assert(Router.canAccess({ access: ['public'] }, 'guest'));
-  assert(Router.fallbackFor('patient') === 'my-appointments' && Router.fallbackFor('guest') === 'login');
+check('Router: a screen that is not built yet shows a friendly page', () => {
+  const html = Router.notBuiltPage({ title: 'Booking', View: class BookingView {} });
+  assert(html.includes('Not built yet') && html.includes('BookingView.js'));
 });
 
-// ---------- Malak: appointments ----------
-check('Booking a taken slot throws SlotUnavailableError', () => {
-  const { appointments } = fresh();
-  throws(() => appointments.book('p1', 'd1', isoDate(0), '09:00'), SlotUnavailableError);
-});
-check('Booking a free slot works and the slot becomes taken', () => {
-  const { appointments } = fresh();
-  appointments.book('p1', 'd2', isoDate(1), '12:00');
-  assert(!appointments.freeSlots('d2', isoDate(1)).find((s) => s.time === '12:00').free);
-});
-check('nextFor() finds Youssef\'s appointment in 3 days', () => {
-  const { appointments } = fresh();
-  assert(appointments.nextFor('p1')?.date === isoDate(3));
-});
+// ---------- Teammates: add your checks below ----------
+// Lojaine (PatientController) · Rodina (DoctorController) · Malak (AppointmentController)
+// Loay (ReportController) · Wagdy & Belal (StatsController)
 
-// ---------- Rodina: doctors ----------
-check('Doctor not available cancels that day and blocks slots', () => {
-  const { doctors, appointments } = fresh();
-  const cancelled = doctors.markUnavailable('d1', isoDate(0), 'Sick leave');
-  assert(cancelled.length === 2, `cancelled ${cancelled.length}`);
-  assert(appointments.freeSlots('d1', isoDate(0)).every((s) => !s.free));
-});
-
-// ---------- Loay: reports ----------
-check('Youssef has 2 reports; 2 visits wait for a report', () => {
-  const { reports } = fresh();
-  assert(reports.forPatient('p1').length === 2 && reports.waitingForReport().length === 2);
-});
-
-// ---------- Wagdy & Belal: statistics ----------
-check('Statistics: revenue counts completed visits only', () => {
-  const { stats } = fresh();
-  assert(stats.revenue() === 400 + 250 + 350 + 400, `revenue ${stats.revenue()}`);
-});
-
-// ---------- Lojaine: add your PatientController checks here ----------
+session.end();
 
 // ---------- show results ----------
 const ul = document.getElementById('results');
+const icon = { pass: '✔', fail: '✘', wait: '…' };
 results.forEach((r) => {
   const li = document.createElement('li');
-  li.className = r.ok ? 'pass' : 'fail';
-  li.textContent = `${r.ok ? '✔' : '✘'} ${r.name}${r.ok ? '' : ' — ' + r.msg}`;
+  li.className = r.state;
+  li.textContent = `${icon[r.state]} ${r.name}${r.msg ? ' — ' + r.msg : ''}`;
   ul.appendChild(li);
 });
-const failed = results.filter((r) => !r.ok).length;
+const failed = results.filter((r) => r.state === 'fail').length;
+const waiting = results.filter((r) => r.state === 'wait').length;
 const summary = document.getElementById('summary');
-summary.textContent = failed ? `${failed} of ${results.length} checks failed` : `All ${results.length} checks passed`;
+summary.textContent = failed
+  ? `${failed} of ${results.length} checks failed`
+  : `${results.length - waiting} checks passed${waiting ? `, ${waiting} waiting for teammates` : ''}`;
 summary.className = failed ? 'fail' : 'pass';
-window.__checks = { total: results.length, failed, results };
+window.__checks = { total: results.length, failed, waiting, results };

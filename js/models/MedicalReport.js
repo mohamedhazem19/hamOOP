@@ -1,22 +1,10 @@
-// Owner: Loay Hossam (Patient Module – reports)
-import Scan from './Scan.js';
+// Owner: Loay Hossam (Patient Module)
+// Not built yet – Loay: write this class. See your task PDF and the README "Contracts" table.
+//
+// TODO(Loay):
+//  - constructor({ id, appointmentId, title, diagnosis, vitals, notes, prescriptions, scans, followUpId })
+//  - scans are Scan objects (composition); addScan(scan)
+//  - title and diagnosis required
 
-// Composition: a report owns its scans.
-// TODO(Loay): private fields + getters, validation (title and diagnosis required)
 export default class MedicalReport {
-  constructor({ id, appointmentId, title, diagnosis, vitals = '', notes = '', prescriptions = [], scans = [], followUpId = null }) {
-    this.id = id;
-    this.appointmentId = appointmentId;
-    this.title = title;
-    this.diagnosis = diagnosis;
-    this.vitals = vitals;
-    this.notes = notes;
-    this.prescriptions = prescriptions; // [{ name, how }]
-    this.followUpId = followUpId;
-    this.scans = scans.map((s) => (s instanceof Scan ? s : new Scan(s)));
-  }
-
-  addScan(scan) {
-    this.scans.push(scan);
-  }
 }

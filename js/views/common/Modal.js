@@ -1,13 +1,9 @@
 // Owner: Belal Mohamed Ahmed (GUI general)
-// Week-1 starter. TODO(Belal): pop-in animation, focus trap, close on Escape.
-export default class Modal {
-  static open(html) {
-    const root = document.getElementById('modal-root');
-    root.innerHTML = `<div class="modal" role="dialog" aria-modal="true"><div class="modal__card">${html}</div></div>`;
-    return root.querySelector('.modal__card');
-  }
+// Not built yet – Belal: write this class. See your task PDF and the README "Contracts" table.
+//
+// TODO(Belal):
+//  - static open(html) into #modal-root, static close()
+//  - pop-in animation, close on Escape, keep focus inside
 
-  static close() {
-    document.getElementById('modal-root').innerHTML = '';
-  }
+export default class Modal {
 }

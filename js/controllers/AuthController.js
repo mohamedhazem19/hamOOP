@@ -35,8 +35,11 @@ export default class AuthController {
       return admin;
     }
 
+    if (typeof this.patients.findByPhone !== 'function') {
+      throw new InvalidInputError('Patient sign in is not ready yet: it needs PatientController.findByPhone() (Lojaine).');
+    }
     const patient = this.patients.findByPhone(id);
-    if (!patient || !patient.checkPassword(password)) throw new InvalidInputError(WRONG_LOGIN);
+    if (!patient || !patient.checkPassword?.(password)) throw new InvalidInputError(WRONG_LOGIN);
     session.start(patient);
     return patient;
   }
@@ -51,6 +54,9 @@ export default class AuthController {
     if (password.length < 4) throw new InvalidInputError('Password must be at least 4 characters.');
     if (password !== confirmPassword) throw new InvalidInputError('Passwords do not match.');
     // PatientController checks name, phone (format + not used) and age.
+    if (typeof this.patients.register !== 'function') {
+      throw new InvalidInputError('Creating an account is not ready yet: it needs PatientController.register() (Lojaine).');
+    }
     const patient = this.patients.register({ ...data, password });
     session.start(patient);
     return patient;

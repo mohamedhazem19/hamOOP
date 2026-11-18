@@ -1,18 +1,10 @@
 // Owner: Lojaine Ahmed Mohamed (Patient Module)
-// Week-1 skeleton from the Team Leader so the app runs. Lojaine: complete the TODOs.
+// Not built yet – Lojaine: write this class. See your task PDF and the README "Contracts" table.
 //
 // TODO(Lojaine):
-//  - make Person abstract: throw an Error if someone calls `new Person(...)` directly (check new.target)
-//  - turn id, name, phone into #private fields with getters (and a validated setter for phone)
-//  - keep getDetails() so subclasses can override it (polymorphism)
-export default class Person {
-  constructor(id, name, phone) {
-    this.id = id;
-    this.name = name;
-    this.phone = phone;
-  }
+//  - abstract: throw an Error if someone calls new Person(...) directly (check new.target)
+//  - #private id, name, phone with getters; validated setter for phone (11 digits starting with 01)
+//  - getDetails() that subclasses override (polymorphism)
 
-  getDetails() {
-    return `${this.name} (${this.phone})`;
-  }
+export default class Person {
 }
