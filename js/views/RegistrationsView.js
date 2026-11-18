@@ -1,19 +1,9 @@
 // Owner: Lojaine Ahmed Mohamed (Patient Module)
-// Week-1 placeholder from the Team Leader. TODO(Lojaine Ahmed Mohamed): build the real screen – see your task PDF.
-import BaseView, { esc } from './common/BaseView.js';
-import { isoDate } from '../store/sampleData.js';
+// Not built yet – Lojaine: write this class. See your task PDF and the README "Contracts" table.
+//
+// TODO(Lojaine):
+//  - extends BaseView (render + bind)
+//  - register walk-in patient form + searchable table of registered patients
 
-export default class RegistrationsView extends BaseView {
-  render() {
-    const today = isoDate(0);
-    void today; void esc;
-    return this.placeholder({
-      title: 'Patient registrations',
-      owners: 'Lojaine Ahmed Mohamed (Patient Module)',
-      pdf: 'Lojaine task PDF',
-      checks: [
-        `Registered patients: ${this.c.patients.all().map((p) => esc(p.name)).join(', ')}`,
-      ],
-    });
-  }
+export default class RegistrationsView {
 }
