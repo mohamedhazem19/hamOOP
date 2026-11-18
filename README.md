@@ -17,7 +17,13 @@ All data lives in memory in the **DataStore**, filled from `js/store/sampleData.
 4. Sign in with:
    - Patient: `01012345678` / `1234`
    - Admin: `ADMIN` / `1234`
-5. Open `tests.html` with Live Server. All checks must be green before you open a Pull Request.
+5. Open `tests.html` with Live Server. Green = passed, red = failed, yellow = waiting for a teammate's code.
+   No red before you open a Pull Request.
+
+**Right now only the team leader's part is written** (page, router, session, data store, sign in).
+Every other file is an **empty shell**: it has the owner, the class name and a `TODO` list – nothing else.
+Pages whose screen is not written yet show *"Not built yet"*. Admin sign in (`ADMIN` / `1234`) works today;
+patient sign in starts working once Lojaine writes `PatientController.findByPhone()`.
 
 Tip: in the browser console, type `ham.store`, `ham.controllers` or `ham.session` to inspect the data.
 
@@ -39,7 +45,8 @@ Tip: in the browser console, type `ham.store`, `ham.controllers` or `ham.session
 
 Every file starts with an `// Owner:` line. **Only change your own files.** Need a change in someone else's file? Ask them (or Mohamed).
 
-Search the project for `TODO(YourName)` to find your tasks. Your task PDF has screenshots of every screen you build.
+Open your files and read the `TODO(YourName)` list at the top – that is your work. Your task PDF has
+screenshots of every screen you build.
 
 ---
 
@@ -68,7 +75,7 @@ Move between pages with `this.ctx.router.go('booking', { doctorId: 'd1' })`; the
 
 The Router sends people away from pages they may not open (patients → My Appointments, guests → Sign in).
 
-### Contracts – methods you can already call today
+### Contracts – the methods each owner must write
 
 | Controller | Methods |
 |---|---|
@@ -79,7 +86,9 @@ The Router sends people away from pages they may not open (patients → My Appoi
 | `reports` (Loay) | `byId(id)`, `forAppointment(id)`, `forPatient(id)`, `waitingForReport()`, `publish(appointmentId, data)` |
 | `stats` (Wagdy & Belal) | `perDoctor()`, `perDepartment()`, `revenue()` |
 
-These are **week-1 starter versions** written by the team leader so everyone can work in parallel. Each owner finishes their own (look for `TODO`). **Do not rename these methods** – other people call them. Need a new method? Add it and tell the team.
+Each owner writes these in their own controller. **Use exactly these names** – other people call them.
+Need a new method? Add it and tell the team. Views extend `BaseView` (Wagdy) and have `render()` + `bind(root)`;
+the Router shows a view as soon as its class has a `render()` method.
 
 Dates are strings `'YYYY-MM-DD'`, times are `'HH:MM'`. Use `isoDate(0)` from `sampleData.js` for today.
 
@@ -130,7 +139,7 @@ Suggested branch names: `feature/login-nourhan`, `feature/signup-rotage`, `featu
 
 | Week | Goal |
 |---|---|
-| 1 ✅ | Repo, folders, router, session, DataStore + sample data, AuthController, starter controllers, placeholder screens, tests page (**done – team leader**) |
+| 1 ✅ | Team leader: repo, folders, `index.html`, router, session, DataStore + sample data, AuthController, tests page, README; empty shells with TODO lists for everyone (**done**) |
 | 2 | Models finished by their owners (private fields, abstract classes, validation); theme.css + common components |
 | 3 | Controllers finished with all rules and errors; checks added to `tests.html` |
 | 4 | Every placeholder screen replaced with the real design from the prototype |
