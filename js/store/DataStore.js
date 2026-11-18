@@ -40,11 +40,12 @@ export default class DataStore {
   /** Builds model objects from plain data (see sampleData.js). */
   load(data) {
     this.reset();
+    // The ?. calls keep the app running while teammates are still writing these models.
     this.hospital = new Hospital(data.hospital.name);
-    data.departments.forEach((name) => this.hospital.addDepartment(new Department(name)));
+    data.departments.forEach((name) => this.hospital.addDepartment?.(new Department(name)));
 
     this.doctors = data.doctors.map((d) => (d.type === 'Specialist' ? new SpecialistDoctor(d) : new GeneralDoctor(d)));
-    this.doctors.forEach((doc) => this.hospital.getDepartment(doc.department)?.addDoctor(doc));
+    this.doctors.forEach((doc) => this.hospital.getDepartment?.(doc.department)?.addDoctor?.(doc));
 
     this.patients = data.patients.map((p) => new Patient(p));
     this.appointments = data.appointments.map((a) => new Appointment(a));
