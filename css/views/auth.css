@@ -1,747 +1,544 @@
-  /* =========================================
-   HAM HOSPITAL - AUTHENTICATION
-   Owner: Nourhan Alaa Eldin & Rotage Waleed Ahmed
-   Shared CSS: Login + Sign Up
-========================================= */
+  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HAM Hospital - Authentication Test</title>
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Caveat:wght@400;500;600&display=swap');
+<style>
+.auth {
+  --auth-green: #0b4d3b;
+  --auth-mint: #e8f3ee;
+  --auth-ink: #10231c;
+  --auth-muted: #5b6b65;
+  --auth-line: #e3ebe7;
+  --auth-field: #f6f8f7;
+  --auth-danger: #b42323;
 
-
-/* =========================================
-   GLOBAL AUTH PAGE
-========================================= */
-
-.auth-page {
-
-    min-height: 100vh;
-    width: 100%;
-
-    padding: 18px 26px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    background: #F5F9F7;
-
-    color: #10221D;
-
-    font-family: 'Plus Jakarta Sans', sans-serif;
-
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 32px 20px;
+  box-sizing: border-box;
+  color: var(--auth-ink);
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
 }
 
-.auth-page *,
-.auth-page *::before,
-.auth-page *::after {
-
-    box-sizing: border-box;
-
+.auth *,
+.auth *::before,
+.auth *::after {
+  box-sizing: border-box;
 }
 
-
-/* =========================================
-   MAIN CONTAINER
-========================================= */
-
-.auth-shell {
-
-    width: 100%;
-    max-width: 760px;
-
-    min-height: 663px;
-
-    display: grid;
-
-    grid-template-columns: 1fr 1.08fr;
-
-    overflow: hidden;
-
-    background: #FFFFFF;
-
-    border: 1px solid #DFEBE4;
-
-    border-radius: 25px;
-
-    box-shadow: 0 15px 45px rgba(12, 76, 57, 0.07);
-
+.auth h1,
+.auth h2,
+.auth p {
+  margin: 0;
 }
 
-
-/* =========================================
-   LEFT BRAND PANEL
-========================================= */
-
-.auth-brand-panel {
-
-    min-width: 0;
-
-    padding: 38px 34px;
-
-    display: flex;
-
-    flex-direction: column;
-
-    justify-content: space-between;
-
-    background: #0B4D3B;
-
-    color: #FFFFFF;
-
+.auth-card {
+  width: min(100%, 880px);
+  display: grid;
+  grid-template-columns: .93fr 1fr;
+  background: white;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(11,77,59,.14);
 }
 
-
-/* =========================================
-   LOGO
-========================================= */
+.auth-panel {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 24px;
+  padding: 32px 34px;
+  background: var(--auth-green);
+  color: white;
+}
 
 .auth-brand {
-
-    display: inline-flex;
-
-    align-items: center;
-
-    gap: 10px;
-
-    width: fit-content;
-
-    color: #FFFFFF;
-
-    text-decoration: none;
-
-    font-size: 18px;
-
-    font-weight: 800;
-
-    letter-spacing: -0.5px;
-
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
 }
 
-.auth-brand svg {
-
-    width: 27px;
-    height: 27px;
-
-    flex-shrink: 0;
-
-    display: block;
-
+.auth-panel__body {
+  align-self: center;
 }
 
-
-/* =========================================
-   BRAND CONTENT
-========================================= */
-
-.auth-brand-copy {
-
-    max-width: 310px;
-
+.auth-headline {
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.12;
 }
 
-.auth-brand-copy h1 {
-
-    margin: 0 0 13px;
-
-    color: #FFFFFF;
-
-    font-size: 28px;
-
-    line-height: 1.15;
-
-    font-weight: 800;
-
-    letter-spacing: -0.8px;
-
+.auth-headline span {
+  color: #7ed9b0;
 }
 
-.auth-brand-copy h1 span {
-
-    color: #8ED9BA;
-
+.auth-lead {
+  margin-top: 14px;
+  max-width: 300px;
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: rgba(255,255,255,.78);
 }
 
-.auth-brand-copy p {
-
-    margin: 0;
-
-    max-width: 290px;
-
-    color: #E2EEE8;
-
-    font-size: 12px;
-
-    line-height: 1.7;
-
-    font-weight: 400;
-
+.auth-tagline {
+  font-family: Georgia, serif;
+  font-size: 30px;
+  font-weight: 600;
 }
 
-
-/* =========================================
-   BRAND FOOTER
-========================================= */
-
-.auth-brand-footer {
-
-    color: #D4E9DF;
-
-    font-family: 'Caveat', cursive;
-
-    font-size: 27px;
-
-    font-weight: 500;
-
-    white-space: nowrap;
-
+.auth-main {
+  padding: 28px 34px;
+  display: flex;
+  flex-direction: column;
 }
 
-
-/* =========================================
-   RIGHT FORM PANEL
-========================================= */
-
-.auth-form-panel {
-
-    min-width: 0;
-
-    padding: 35px 33px;
-
-    display: flex;
-
-    justify-content: center;
-
-    align-items: center;
-
-    background: #FFFFFF;
-
+.auth-back {
+  align-self: flex-start;
+  margin-bottom: 16px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--auth-green);
+  text-decoration: none;
 }
-
-.auth-form-container {
-
-    width: 100%;
-
-    max-width: 328px;
-
-}
-
-
-/* =========================================
-   BACK TO HOME
-========================================= */
-
-.auth-back-link {
-
-    display: inline-flex;
-
-    align-items: center;
-
-    gap: 6px;
-
-    margin-bottom: 25px;
-
-    color: #0B4D3B;
-
-    font-size: 12px;
-
-    font-weight: 700;
-
-    text-decoration: none;
-
-    transition: 0.2s ease;
-
-}
-
-.auth-back-link:hover {
-
-    color: #087052;
-
-    text-decoration: underline;
-
-}
-
-
-/* =========================================
-   AUTH TABS
-========================================= */
 
 .auth-tabs {
-
-    width: 100%;
-
-    height: 46px;
-
-    padding: 4px;
-
-    display: grid;
-
-    grid-template-columns: 1fr 1fr;
-
-    background: #EDF4F0;
-
-    border-radius: 30px;
-
-    margin-bottom: 16px;
-
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  margin-bottom: 22px;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--auth-mint);
 }
 
 .auth-tab {
-
-    display: flex;
-
-    justify-content: center;
-
-    align-items: center;
-
-    border-radius: 30px;
-
-    color: #455C52;
-
-    font-size: 12px;
-
-    font-weight: 700;
-
-    text-decoration: none;
-
-    transition: all 0.2s ease;
-
-    cursor: pointer;
-
-}
-
-.auth-tab:hover {
-
-    color: #0B4D3B;
-
+  padding: 10px 12px;
+  border-radius: 999px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--auth-green);
+  text-decoration: none;
 }
 
 .auth-tab.is-active {
-
-    background: #FFFFFF;
-
-    color: #0B4D3B;
-
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
-
+  background: white;
 }
 
-
-/* =========================================
-   FORM HEADING
-========================================= */
-
-.auth-form-heading {
-
-    margin-bottom: 12px;
-
+.auth-title {
+  font-size: 24px;
+  font-weight: 800;
 }
 
-.auth-form-heading h2 {
-
-    margin: 0 0 2px;
-
-    color: #10231C;
-
-    font-size: 21px;
-
-    font-weight: 800;
-
-    letter-spacing: -0.5px;
-
-    line-height: 1.35;
-
+.auth-subtitle {
+  margin: 3px 0 18px !important;
+  font-size: 12px;
+  color: var(--auth-muted);
 }
-
-.auth-form-heading p {
-
-    margin: 0;
-
-    color: #53675E;
-
-    font-size: 11px;
-
-    font-weight: 400;
-
-}
-
-
-/* =========================================
-   FORM
-========================================= */
 
 .auth-form {
-
-    width: 100%;
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 11px;
-
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
 .auth-field {
-
-    min-width: 0;
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 5px;
-
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
 }
 
 .auth-field label {
-
-    color: #14271F;
-
-    font-size: 11px;
-
-    font-weight: 700;
-
+  font-size: 12px;
+  font-weight: 700;
 }
 
-
-/* =========================================
-   INPUTS
-========================================= */
-
-.auth-field input,
-.auth-field select {
-
-    width: 100%;
-
-    height: 38px;
-
-    padding: 0 12px;
-
-    background: #F7FAF8;
-
-    border: 1px solid #D1E1D9;
-
-    border-radius: 11px;
-
-    outline: none;
-
-    color: #15251E;
-
-    font-family: 'Plus Jakarta Sans', sans-serif;
-
-    font-size: 12px;
-
-    transition: all 0.2s ease;
-
+.auth-row {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 14px;
 }
 
-.auth-field input:focus,
-.auth-field select:focus {
-
-    border-color: #2F9E74;
-
-    background: #FFFFFF;
-
-    box-shadow: 0 0 0 3px rgba(47, 158, 116, 0.08);
-
+.auth-input {
+  width: 100%;
+  padding: 12px 14px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--auth-ink);
+  background: var(--auth-field);
+  border: 1px solid var(--auth-line);
+  border-radius: 12px;
 }
 
-.auth-field input::placeholder {
-
-    color: #8B9993;
-
+.auth-input:focus {
+  outline: none;
+  background: white;
+  border-color: var(--auth-green);
+  box-shadow: 0 0 0 3px rgba(11,77,59,.12);
 }
 
-.auth-field select {
-
-    cursor: pointer;
-
+.auth-input[aria-invalid="true"] {
+  border-color: #e39a9a;
 }
-
-
-/* REMOVE NUMBER INPUT ARROWS */
-
-.auth-field input::-webkit-inner-spin-button,
-.auth-field input::-webkit-outer-spin-button {
-
-    -webkit-appearance: none;
-
-    margin: 0;
-
-}
-
-
-/* =========================================
-   AGE + GENDER
-========================================= */
-
-.auth-field-row {
-
-    display: grid;
-
-    grid-template-columns: 1fr 104px;
-
-    gap: 11px;
-
-}
-
-
-/* =========================================
-   ERROR MESSAGE
-========================================= */
 
 .auth-error {
-
-    display: none;
-
-    padding: 10px 12px;
-
-    border: 1px solid #F1CCCC;
-
-    border-radius: 9px;
-
-    background: #FFF1F1;
-
-    color: #C0392B;
-
-    font-size: 11px;
-
-    line-height: 1.5;
-
+  padding: 10px 12px;
+  font-size: 12px;
+  color: var(--auth-danger);
+  background: #fdeeee;
+  border: 1px solid #f6caca;
+  border-radius: 10px;
 }
 
-.auth-error.is-visible {
-
-    display: block;
-
+.auth-error[hidden] {
+  display: none;
 }
-
-
-/* =========================================
-   SUCCESS MESSAGE
-========================================= */
-
-.auth-success {
-
-    display: none;
-
-    padding: 10px 12px;
-
-    border: 1px solid #C6E5D5;
-
-    border-radius: 9px;
-
-    background: #EFFAF3;
-
-    color: #16734D;
-
-    font-size: 11px;
-
-    line-height: 1.5;
-
-}
-
-.auth-success.is-visible {
-
-    display: block;
-
-}
-
-
-/* =========================================
-   SUBMIT BUTTON
-========================================= */
 
 .auth-submit {
-
-    width: 100%;
-
-    min-height: 42px;
-
-    margin-top: 1px;
-
-    border: none;
-
-    border-radius: 30px;
-
-    background: #0B4D3B;
-
-    color: #FFFFFF;
-
-    font-family: 'Plus Jakarta Sans', sans-serif;
-
-    font-size: 12px;
-
-    font-weight: 800;
-
-    cursor: pointer;
-
-    transition: all 0.2s ease;
-
+  margin-top: 2px;
+  padding: 14px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: white;
+  background: var(--auth-green);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: .2s;
 }
 
 .auth-submit:hover {
+  background: #0a3f31;
+  transform: translateY(-1px);
+}
 
-    background: #087052;
+.auth-switch {
+  margin-top: 16px !important;
+  text-align: center;
+  font-size: 12px;
+  color: var(--auth-muted);
+}
 
-    transform: translateY(-1px);
+.auth-switch a {
+  font-weight: 800;
+  color: var(--auth-green);
+}
+
+.auth-demo {
+  margin-top: 10px !important;
+  text-align: center;
+  font-size: 11px;
+  color: var(--auth-muted);
+}
+
+@media (max-width:760px) {
+  .auth {
+    padding: 16px 12px;
+    place-items: start center;
+  }
+
+  .auth-card {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-panel {
+    grid-template-rows: auto auto;
+    gap: 14px;
+    padding: 20px 22px;
+  }
+
+  .auth-headline {
+    font-size: 24px;
+  }
+
+  .auth-lead,
+  .auth-tagline {
+    display: none;
+  }
+
+  .auth-main {
+    padding: 22px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<section class="auth">
+
+<div class="auth-card">
+
+<aside class="auth-panel">
+
+<div class="auth-brand">
+<svg viewBox="0 0 24 24" width="24" height="24">
+<path d="M12 21c0-6.5 3.2-11.5 9-13.5-.8 7.2-4 12.2-9 13.5z" fill="#5fcf9f"/>
+<path d="M12 21C12 14.5 8.8 9.5 3 7.5c.8 7.2 4 12.2 9 13.5z" fill="#e8f3ee"/>
+</svg>
+<strong>HAM Hospital</strong>
+</div>
+
+<div class="auth-panel__body">
+<h2 class="auth-headline">
+Your care, <span>one click away</span>
+</h2>
+
+<p class="auth-lead">
+Book visits with our doctors, track your appointments and read your medical reports anytime.
+</p>
+</div>
+
+<p class="auth-tagline">Your Health, Our Priority</p>
+
+</aside>
+
+<main class="auth-main">
+
+<a class="auth-back" href="#" onclick="return false;">
+← Back to home
+</a>
+
+<nav class="auth-tabs">
+<a class="auth-tab is-active" href="#" id="loginTab">Sign in</a>
+<a class="auth-tab" href="#" id="signupTab">Create account</a>
+</nav>
+
+<div id="formArea"></div>
+
+</main>
+</div>
+</section>
+
+<script>
+
+const formArea = document.getElementById("formArea");
+
+const loginTab = document.getElementById("loginTab");
+const signupTab = document.getElementById("signupTab");
+
+function showLogin() {
+
+loginTab.classList.add("is-active");
+signupTab.classList.remove("is-active");
+
+formArea.innerHTML = `
+
+<h1 class="auth-title">Welcome back</h1>
+
+<p class="auth-subtitle">
+Sign in to manage your appointments.
+</p>
+
+<form class="auth-form" id="loginForm" novalidate>
+
+<div class="auth-field">
+<label>Phone number</label>
+<input class="auth-input" name="phone" type="text"
+placeholder="e.g. 01012345678">
+</div>
+
+<div class="auth-field">
+<label>Password</label>
+<input class="auth-input" name="password" type="password">
+</div>
+
+<p class="auth-error" id="error" hidden></p>
+
+<button class="auth-submit" type="submit">
+Sign in →
+</button>
+
+</form>
+
+<p class="auth-switch">
+New here?
+<a href="#" id="goSignup">Create an account</a>
+</p>
+
+<p class="auth-demo">
+Demo patient: 01012345678 · password 1234
+</p>
+`;
+
+document.getElementById("goSignup").onclick = e => {
+e.preventDefault();
+showSignup();
+};
+
+const form = document.getElementById("loginForm");
+const error = document.getElementById("error");
+
+form.addEventListener("input", () => {
+error.hidden = true;
+error.textContent = "";
+});
+
+form.onsubmit = e => {
+
+e.preventDefault();
+
+const phone = form.elements.phone.value.trim();
+const password = form.elements.password.value;
+
+if (!phone || !password) {
+error.textContent = "Please enter your phone number and password.";
+error.hidden = false;
+return;
+}
+
+if (phone === "01012345678" && password === "1234") {
+alert("Login successful!");
+} else {
+error.textContent = "Wrong phone number or password.";
+error.hidden = false;
+}
+
+};
 
 }
 
-.auth-submit:active {
+function showSignup() {
 
-    transform: translateY(0);
+signupTab.classList.add("is-active");
+loginTab.classList.remove("is-active");
+
+formArea.innerHTML = `
+
+<h1 class="auth-title">Create your account</h1>
+
+<p class="auth-subtitle">
+It takes less than a minute.
+</p>
+
+<form class="auth-form" id="signupForm" novalidate>
+
+<div class="auth-field">
+<label>Full name</label>
+<input class="auth-input" name="name" type="text">
+</div>
+
+<div class="auth-field">
+<label>Phone number</label>
+<input class="auth-input" name="phone" type="tel">
+</div>
+
+<div class="auth-row">
+
+<div class="auth-field">
+<label>Age</label>
+<input class="auth-input" name="age" type="number" min="1" max="120">
+</div>
+
+<div class="auth-field">
+<label>Gender</label>
+<select class="auth-input" name="gender">
+<option value="Male">Male</option>
+<option value="Female">Female</option>
+</select>
+</div>
+
+</div>
+
+<div class="auth-field">
+<label>Password</label>
+<input class="auth-input" name="password" type="password">
+</div>
+
+<div class="auth-field">
+<label>Confirm password</label>
+<input class="auth-input" name="confirmPassword" type="password">
+</div>
+
+<p class="auth-error" id="error" hidden></p>
+
+<button class="auth-submit" type="submit">
+Create account →
+</button>
+
+</form>
+
+<p class="auth-switch">
+Already have an account?
+<a href="#" id="goLogin">Sign in</a>
+</p>
+`;
+
+document.getElementById("goLogin").onclick = e => {
+e.preventDefault();
+showLogin();
+};
+
+const form = document.getElementById("signupForm");
+const error = document.getElementById("error");
+
+form.addEventListener("input", () => {
+error.hidden = true;
+error.textContent = "";
+});
+
+form.onsubmit = e => {
+
+e.preventDefault();
+
+const name = form.elements.name.value.trim();
+const phone = form.elements.phone.value.trim();
+const age = Number(form.elements.age.value);
+const password = form.elements.password.value;
+const confirm = form.elements.confirmPassword.value;
+
+let message = "";
+
+if (!name) {
+message = "Please enter your full name.";
+}
+else if (!phone) {
+message = "Please enter your phone number.";
+}
+else if (!age || age < 1 || age > 120) {
+message = "Please enter a valid age.";
+}
+else if (password.length < 4) {
+message = "Password must be at least 4 characters.";
+}
+else if (password !== confirm) {
+message = "Passwords do not match.";
+}
+
+if (message) {
+error.textContent = message;
+error.hidden = false;
+return;
+}
+
+alert("Sign up test successful! No real account was created.");
+
+form.reset();
+
+};
 
 }
 
-.auth-submit:disabled {
+loginTab.onclick = e => {
+e.preventDefault();
+showLogin();
+};
 
-    opacity: 0.7;
+signupTab.onclick = e => {
+e.preventDefault();
+showSignup();
+};
 
-    cursor: wait;
+showLogin();
 
-    transform: none;
+</script>
 
-}
-
-
-/* =========================================
-   SWITCH LOGIN / SIGNUP
-========================================= */
-
-.auth-switch-copy {
-
-    margin: 18px 0 0;
-
-    color: #52675D;
-
-    text-align: center;
-
-    font-size: 11px;
-
-    line-height: 1.6;
-
-}
-
-.auth-switch-copy a {
-
-    margin-left: 3px;
-
-    color: #0B4D3B;
-
-    font-weight: 800;
-
-    text-decoration: underline;
-
-    cursor: pointer;
-
-}
-
-.auth-switch-copy a:hover {
-
-    color: #087052;
-
-}
-
-
-/* =========================================
-   RESPONSIVE - TABLETS & MOBILE
-========================================= */
-
-@media (max-width: 760px) {
-
-    .auth-page {
-
-        padding: 12px;
-
-        align-items: flex-start;
-
-    }
-
-    .auth-shell {
-
-        max-width: 520px;
-
-        min-height: auto;
-
-        grid-template-columns: 1fr;
-
-        border-radius: 20px;
-
-    }
-
-    .auth-brand-panel {
-
-        min-height: 200px;
-
-        padding: 25px;
-
-        gap: 25px;
-
-    }
-
-    .auth-brand-copy h1 {
-
-        font-size: 24px;
-
-    }
-
-    .auth-brand-copy p {
-
-        font-size: 11px;
-
-    }
-
-    .auth-brand-footer {
-
-        display: none;
-
-    }
-
-    .auth-form-panel {
-
-        padding: 28px 23px;
-
-    }
-
-    .auth-form-container {
-
-        max-width: 390px;
-
-    }
-
-}
-
-
-/* =========================================
-   SMALL MOBILE
-========================================= */
-
-@media (max-width: 380px) {
-
-    .auth-form-panel {
-
-        padding: 25px 17px;
-
-    }
-
-    .auth-field-row {
-
-        grid-template-columns: 1fr 95px;
-
-        gap: 8px;
-
-    }
-
-    .auth-form-heading h2 {
-
-        font-size: 19px;
-
-    }
-
-    .auth-brand-copy h1 {
-
-        font-size: 22px;
-
-    }
-
-}
+</body>
+</html>
