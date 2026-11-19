@@ -1,405 +1,153 @@
-  /* =========================================
-   HAM HOSPITAL - SIGN UP VIEW
-   Owner: Nourhan Alaa Eldin
-========================================= */
-
-export default class SignUpView {
-
-    render() {
-
-        return `
-
-            <div class="auth-page">
-
-                <div class="auth-shell">
-
-
-                    <!-- LEFT BRAND PANEL -->
-                    <section class="auth-brand-panel">
-
-                        <a href="#" class="auth-brand">
-
-                            <svg viewBox="0 0 40 40" fill="none">
-
-                                <path d="M7 5C7 18 14 28 23 32C23 19 17 9 7 5Z"
-                                      fill="white"/>
-
-                                <path d="M33 5C33 18 26 28 17 32C17 19 23 9 33 5Z"
-                                      fill="#8ED9BA"/>
-
-                            </svg>
-
-                            <span>HAM Hospital</span>
-
-                        </a>
-
-
-                        <div class="auth-brand-copy">
-
-                            <h1>
-                                Your care,
-                                <span>one click away</span>
-                            </h1>
-
-                            <p>
-                                Book visits with our doctors, track your
-                                appointments and read your medical reports
-                                anytime.
-                            </p>
-
-                        </div>
-
-
-                        <div class="auth-brand-footer">
-                            Your Health, Our Priority
-                        </div>
-
-                    </section>
-
-
-
-                    <!-- RIGHT FORM PANEL -->
-                    <section class="auth-form-panel">
-
-                        <div class="auth-form-container">
-
-
-                            <a href="#" class="auth-back-link"
-                               data-home>
-                                ← Back to home
-                            </a>
-
-
-                            <!-- AUTH TABS -->
-                            <div class="auth-tabs">
-
-                                <a href="#" class="auth-tab"
-                                   data-login>
-                                    Sign in
-                                </a>
-
-                                <a href="#" class="auth-tab is-active">
-                                    Create account
-                                </a>
-
-                            </div>
-
-
-
-                            <!-- HEADING -->
-                            <div class="auth-form-heading">
-
-                                <h2>Create your account</h2>
-
-                                <p>
-                                    It takes less than a minute.
-                                </p>
-
-                            </div>
-
-
-
-                            <!-- SIGN UP FORM -->
-                            <form class="auth-form" id="signupForm">
-
-
-                                <div class="auth-field">
-
-                                    <label for="fullName">
-                                        Full name
-                                    </label>
-
-                                    <input
-                                        type="text"
-                                        id="fullName"
-                                        placeholder="Enter your full name"
-                                        required
-                                    >
-
-                                </div>
-
-
-
-                                <div class="auth-field">
-
-                                    <label for="signupPhone">
-                                        Phone number
-                                    </label>
-
-                                    <input
-                                        type="tel"
-                                        id="signupPhone"
-                                        placeholder="Enter your phone number"
-                                        required
-                                    >
-
-                                </div>
-
-
-
-                                <!-- AGE + GENDER -->
-                                <div class="auth-field-row">
-
-                                    <div class="auth-field">
-
-                                        <label for="age">
-                                            Age
-                                        </label>
-
-                                        <input
-                                            type="number"
-                                            id="age"
-                                            placeholder="Your age"
-                                            min="1"
-                                            max="120"
-                                            required
-                                        >
-
-                                    </div>
-
-
-                                    <div class="auth-field">
-
-                                        <label for="gender">
-                                            Gender
-                                        </label>
-
-                                        <select id="gender" required>
-
-                                            <option value="Female">
-                                                Female
-                                            </option>
-
-                                            <option value="Male">
-                                                Male
-                                            </option>
-
-                                        </select>
-
-                                    </div>
-
-                                </div>
-
-
-
-                                <div class="auth-field">
-
-                                    <label for="signupPassword">
-                                        Password
-                                    </label>
-
-                                    <input
-                                        type="password"
-                                        id="signupPassword"
-                                        placeholder="Create a password"
-                                        required
-                                    >
-
-                                </div>
-
-
-
-                                <div class="auth-field">
-
-                                    <label for="confirmPassword">
-                                        Confirm password
-                                    </label>
-
-                                    <input
-                                        type="password"
-                                        id="confirmPassword"
-                                        placeholder="Confirm your password"
-                                        required
-                                    >
-
-                                </div>
-
-
-
-                                <!-- ERROR -->
-                                <div class="auth-error" id="signupError">
-                                </div>
-
-
-                                <!-- SUCCESS -->
-                                <div class="auth-success" id="signupSuccess">
-                                </div>
-
-
-
-                                <button
-                                    type="submit"
-                                    class="auth-submit"
-                                    id="signupButton">
-
-                                    Create account →
-
-                                </button>
-
-
-                            </form>
-
-
-
-                            <p class="auth-switch-copy">
-
-                                Already have an account?
-
-                                <a href="#" data-login>
-                                    Sign in
-                                </a>
-
-                            </p>
-
-
-                        </div>
-
-                    </section>
-
+  // Owner: Nourhan Alaa Eldin & Rotage Waleed Ahmed (Login & Dashboard)
+// Create account screen (#/signup). The HTML is built here in JavaScript: render() returns the text,
+// bind(root) adds the listeners. Styles: css/views/auth.css (shared with LoginView).
+//
+// Uses: this.c.auth.signUp(data)  (Mohamed's AuthController, which calls PatientController.register)
+//       Toast.show(...)           (Belal) – skipped automatically until Belal has written it
+//       this.router.go(...)       (Mohamed's Router)
+
+import BaseView, { esc } from './common/BaseView.js';
+import Toast from './common/Toast.js';
+
+const SYSTEM_ERRORS = [TypeError, ReferenceError, RangeError, SyntaxError];
+const GENERIC_ERROR = 'Something went wrong. Please try again.';
+
+export default class SignUpView extends BaseView {
+  render() {
+    return `
+      <section class="auth" aria-labelledby="signup-title">
+        <div class="auth-card">
+          ${this.#panel()}
+          <div class="auth-main">
+            <a class="auth-back" href="#/home">← Back to home</a>
+
+            <nav class="auth-tabs" aria-label="Sign in or create account">
+              <a class="auth-tab" href="#/login">Sign in</a>
+              <a class="auth-tab is-active" href="#/signup" aria-current="page">Create account</a>
+            </nav>
+
+            <h1 class="auth-title" id="signup-title">Create your account</h1>
+            <p class="auth-subtitle">It takes less than a minute.</p>
+
+            <form class="auth-form" id="signup-form" novalidate>
+              <div class="auth-field">
+                <label for="signup-name">Full name</label>
+                <input class="auth-input" id="signup-name" name="name" type="text" autocomplete="name">
+              </div>
+              <div class="auth-field">
+                <label for="signup-phone">Phone number</label>
+                <input class="auth-input" id="signup-phone" name="phone" type="tel" autocomplete="tel">
+              </div>
+              <div class="auth-row">
+                <div class="auth-field">
+                  <label for="signup-age">Age</label>
+                  <input class="auth-input" id="signup-age" name="age" type="number" inputmode="numeric" min="0" max="120">
                 </div>
+                <div class="auth-field">
+                  <label for="signup-gender">Gender</label>
+                  <select class="auth-input auth-select" id="signup-gender" name="gender">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                  </select>
+                </div>
+              </div>
+              <div class="auth-field">
+                <label for="signup-password">Password</label>
+                <input class="auth-input" id="signup-password" name="password" type="password" autocomplete="new-password">
+              </div>
+              <div class="auth-field">
+                <label for="signup-confirm">Confirm password</label>
+                <input class="auth-input" id="signup-confirm" name="confirmPassword" type="password" autocomplete="new-password">
+              </div>
 
+              <p class="auth-error" data-error role="alert" hidden></p>
+
+              <button type="submit" class="auth-submit">Create account →</button>
+            </form>
+
+            <p class="auth-switch">Already have an account? <a href="#/login">Sign in</a></p>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  bind(root) {
+    const form = this.$(root, '#signup-form');
+    const error = this.$(root, '[data-error]');
+
+    const clearError = () => {
+      error.hidden = true;
+      error.textContent = '';
+      form.querySelectorAll('[aria-invalid]').forEach((input) => input.removeAttribute('aria-invalid'));
+    };
+
+    form.addEventListener('input', clearError);
+    form.addEventListener('change', clearError);
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      clearError();
+      const value = (name) => form.elements[name].value;
+      const age = value('age').trim();
+
+      try {
+        // The controller checks every rule and throws a message we can show as it is.
+        const patient = this.c.auth.signUp({
+          name: value('name'),
+          phone: value('phone'),
+          age: age === '' ? '' : Number(age),
+          gender: value('gender'),
+          password: value('password'),
+          confirmPassword: value('confirmPassword'),
+        });
+        this.router.go('my-appointments');
+        const firstName = String(patient?.name || '').split(' ')[0];
+        if (typeof Toast?.show === 'function') {
+          Toast.show(`Welcome to HAM Hospital${firstName ? `, ${firstName}` : ''}!`, 'ok');
+        }
+      } catch (err) {
+        const isSystem = SYSTEM_ERRORS.some((Type) => err instanceof Type);
+        if (isSystem) console.error(err);
+        error.textContent = isSystem || !err?.message ? GENERIC_ERROR : err.message;
+        error.hidden = false;
+        this.#markField(form, err);
+      }
+    });
+  }
+
+  /** Highlights the field the message is about (InvalidInputError can carry the field name). */
+  #markField(form, err) {
+    let name = err?.field;
+    const message = String(err?.message || '');
+    if (!name) {
+      if (/do not match/i.test(message)) name = 'confirmPassword';
+      else if (/^password/i.test(message)) name = 'password';
+      else if (/phone/i.test(message)) name = 'phone';
+      else if (/name/i.test(message)) name = 'name';
+      else if (/age/i.test(message)) name = 'age';
+    }
+    const input = name ? form.elements[name] : null;
+    if (!input) return;
+    input.setAttribute('aria-invalid', 'true');
+    input.focus();
+  }
+
+  /** Left green panel: logo, headline, short text and the handwritten line. */
+  #panel() {
+    return `
+          <aside class="auth-panel">
+            <div class="auth-brand">
+              <svg class="auth-brand__logo" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+                <path d="M12 21c0-6.5 3.2-11.5 9-13.5-.8 7.2-4 12.2-9 13.5z" fill="#5fcf9f"/>
+                <path d="M12 21C12 14.5 8.8 9.5 3 7.5c.8 7.2 4 12.2 9 13.5z" fill="#e8f3ee"/>
+              </svg>
+              <strong>${esc('HAM Hospital')}</strong>
             </div>
-
-        `;
-
-    }
-
-
-
-    bind() {
-
-        const form = document.getElementById("signupForm");
-
-        const error = document.getElementById("signupError");
-
-        const success = document.getElementById("signupSuccess");
-
-        const button = document.getElementById("signupButton");
-
-
-        // GO TO LOGIN
-        document.querySelectorAll("[data-login]").forEach(link => {
-
-            link.addEventListener("click", (e) => {
-
-                e.preventDefault();
-
-                Router.go("login");
-
-            });
-
-        });
-
-
-
-        // SIGN UP SUBMIT
-        form.addEventListener("submit", async (e) => {
-
-            e.preventDefault();
-
-            error.classList.remove("is-visible");
-
-            success.classList.remove("is-visible");
-
-
-            const fullName =
-                document.getElementById("fullName").value.trim();
-
-            const phone =
-                document.getElementById("signupPhone").value.trim();
-
-            const age =
-                Number(document.getElementById("age").value);
-
-            const gender =
-                document.getElementById("gender").value;
-
-            const password =
-                document.getElementById("signupPassword").value;
-
-            const confirmPassword =
-                document.getElementById("confirmPassword").value;
-
-
-
-            // CHECK PASSWORD MATCH
-            if (password !== confirmPassword) {
-
-                error.textContent = "Passwords do not match.";
-
-                error.classList.add("is-visible");
-
-                return;
-
-            }
-
-
-            // CHECK PASSWORD LENGTH
-            if (password.length < 4) {
-
-                error.textContent = "Password must be at least 4 characters.";
-
-                error.classList.add("is-visible");
-
-                return;
-
-            }
-
-
-            button.disabled = true;
-
-            button.textContent = "Creating account...";
-
-
-
-            try {
-
-                const data = {
-
-                    fullName,
-
-                    phone,
-
-                    age,
-
-                    gender,
-
-                    password
-
-                };
-
-
-                await AuthController.signUp(data);
-
-
-                success.textContent =
-                    "Account created successfully!";
-
-                success.classList.add("is-visible");
-
-
-                setTimeout(() => {
-
-                    Router.go("appointments");
-
-                }, 1000);
-
-
-            } catch (err) {
-
-                error.textContent =
-                    err.message || "Something went wrong. Please try again.";
-
-                error.classList.add("is-visible");
-
-                button.disabled = false;
-
-                button.textContent = "Create account →";
-
-            }
-
-        });
-
-    }
-
+            <div class="auth-panel__body">
+              <h2 class="auth-headline">Your care, <span>one click away</span></h2>
+              <p class="auth-lead">Book visits with our doctors, track your appointments and read your medical reports anytime.</p>
+            </div>
+            <p class="auth-tagline">Your Health, Our Priority</p>
+          </aside>`;
+  }
 }
