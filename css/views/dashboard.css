@@ -1,1 +1,361 @@
 /* Owner: Nourhan Alaa Eldin & Rotage Waleed Ahmed (Login & Dashboard) – Admin dashboard */
+ /* Owner: Nourhan Alaa Eldin & Rotage Waleed Ahmed (Login & Dashboard) – Admin dashboard
+   Every class starts with "dash" so nothing clashes with other screens.
+   Colours come from theme.css (--green, --mint …); the second value is only a fallback
+   while the theme is not finished. */
+
+.dash {
+  --dash-green: var(--green, #0b4d3b);
+  --dash-mint: var(--mint, #e8f3ee);
+  --dash-ink: var(--ink, #10231c);
+  --dash-muted: var(--muted, #5b6b65);
+  --dash-line: var(--line, #e3ebe7);
+  --dash-card: var(--card, #ffffff);
+
+  color: var(--dash-ink);
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 12px;
+  padding: 22px 28px 20px 26px;
+}
+
+.dash h1,
+.dash h2,
+.dash p,
+.dash ul {
+  margin: 0;
+  padding: 0;
+}
+
+.dash ul {
+  list-style: none;
+}
+
+/* ---------- Header ---------- */
+.dash__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.dash__title {
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.dash__subtitle {
+  margin-top: 3px;
+  font-size: 11px;
+  color: var(--dash-muted);
+}
+
+.dash__date {
+  font-size: 11px;
+  color: var(--dash-muted);
+  white-space: nowrap;
+}
+
+/* ---------- Number tiles ---------- */
+.dash-tiles {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.dash-tile,
+.dash-card {
+  background: var(--dash-card);
+  border: 1px solid var(--dash-line);
+  border-radius: 20px;
+}
+
+.dash-tile {
+  padding: 14px 16px 12px;
+}
+
+.dash-tile__label {
+  font-size: 11px;
+  color: var(--dash-muted);
+}
+
+.dash-tile__value {
+  margin-top: 3px;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* ---------- Buttons ---------- */
+.dash-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.dash-btn {
+  font: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 9px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--dash-line);
+  background: var(--dash-card);
+  color: var(--dash-ink);
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.dash-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(11, 77, 59, 0.12);
+}
+
+.dash-btn:focus-visible,
+.dash-link:focus-visible {
+  outline: 2px solid var(--dash-green);
+  outline-offset: 2px;
+}
+
+.dash-btn--primary {
+  background: var(--dash-green);
+  border-color: var(--dash-green);
+  color: #ffffff;
+}
+
+.dash-btn--primary:hover {
+  background: #0a3f31;
+}
+
+.dash-btn--ghost:hover {
+  background: var(--dash-mint);
+}
+
+.dash-btn--warn {
+  background: #fff1e4;
+  border-color: #f6d3b0;
+  color: #a8401a;
+}
+
+.dash-btn--warn:hover {
+  background: #ffe6d0;
+}
+
+.dash-btn--small {
+  padding: 9px 14px;
+  font-size: 11px;
+}
+
+/* ---------- Cards ---------- */
+.dash-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start;
+  margin-bottom: 16px;
+}
+
+.dash-card {
+  padding: 21px 16px 6px;
+}
+
+.dash-card--wide {
+  padding: 16px 16px 4px;
+}
+
+.dash-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.dash-card__title {
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.dash-link {
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--dash-green);
+  background: none;
+  border: 0;
+  padding: 4px 2px;
+  cursor: pointer;
+}
+
+.dash-link:hover {
+  text-decoration: underline;
+}
+
+/* ---------- Lists (registrations + waiting for a report) ---------- */
+.dash-list {
+  margin-top: 28px;
+}
+
+.dash-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 0 15px;
+  border-top: 1px solid var(--dash-line);
+}
+
+.dash-row--report {
+  justify-content: space-between;
+}
+
+.dash-avatar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--dash-mint);
+  color: var(--dash-green);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.dash-row__main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.dash-row__title {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.dash-row__sub {
+  font-size: 10.5px;
+  color: var(--dash-muted);
+}
+
+.dash-row__when {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--dash-green);
+  white-space: nowrap;
+}
+
+/* ---------- Today's appointments table ---------- */
+.dash-table {
+  width: 100%;
+  margin-top: 9px;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.dash-table td {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--dash-line);
+}
+
+/* column widths (<colgroup> in the view) follow the prototype */
+.dash-col--time { width: 9%; }
+.dash-col--patient { width: 29%; }
+.dash-col--doctor { width: 29%; }
+.dash-col--department { width: 20%; }
+.dash-col--status { width: 13%; }
+
+.dash-table__time {
+  font-weight: 700;
+}
+
+.dash-table__muted {
+  color: var(--dash-muted);
+}
+
+.dash-table__status {
+  text-align: left;
+}
+
+/* ---------- Status badges ---------- */
+.dash-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 9px;
+  line-height: 1.2;
+  font-weight: 700;
+  background: #e8effd;
+  color: #2650c7;
+}
+
+.dash-badge--completed {
+  background: #def3e8;
+  color: #1c7a4d;
+}
+
+.dash-badge--cancelled {
+  background: #fde7e7;
+  color: #b42323;
+}
+
+/* ---------- Misc ---------- */
+.dash-empty {
+  padding: 14px 0;
+  color: var(--dash-muted);
+  font-size: 12px;
+}
+
+.dash__note {
+  margin-top: 4px;
+  font-size: 10px;
+  color: var(--dash-muted);
+}
+
+.dash-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- Smaller windows ---------- */
+@media (max-width: 900px) {
+  .dash-tiles {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dash-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .dash {
+    padding: 16px 14px;
+  }
+
+  .dash__header {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .dash__date {
+    padding-top: 0;
+  }
+
+  .dash-card--wide {
+    overflow-x: auto;
+  }
+
+  .dash-table {
+    min-width: 560px;
+  }
+}
