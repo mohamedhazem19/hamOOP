@@ -1,1 +1,705 @@
-/* Owner: Nourhan Alaa Eldin & Rotage Waleed Ahmed (Login & Dashboard) – Sign in / Create account */
+  /* =========================================
+   HAM HOSPITAL - AUTHENTICATION
+   Login Screen
+========================================= */
+
+
+/* Main Screen */
+
+.auth-screen {
+
+    min-height: 100vh;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding: 35px 20px;
+
+    background: #f5f8f6;
+
+    font-family: "Plus Jakarta Sans", sans-serif;
+
+    color: #183b32;
+
+}
+
+
+.auth-screen *,
+.auth-screen *::before,
+.auth-screen *::after {
+
+    box-sizing: border-box;
+
+}
+
+
+/* =========================================
+   MAIN CARD
+========================================= */
+
+.auth-card {
+
+    width: min(100%, 980px);
+
+    min-height: 610px;
+
+    display: grid;
+
+    grid-template-columns: 0.94fr 1.06fr;
+
+    overflow: hidden;
+
+    background: #ffffff;
+
+    border-radius: 24px;
+
+    box-shadow:
+        0 24px 65px rgba(11, 77, 59, 0.12);
+
+}
+
+
+/* =========================================
+   LEFT GREEN PANEL
+========================================= */
+
+.auth-brand-panel {
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: space-between;
+
+    position: relative;
+
+    padding: 48px;
+
+    background: var(--green, #0B4D3B);
+
+    color: #ffffff;
+
+}
+
+
+/* Logo */
+
+.auth-brand {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    width: fit-content;
+
+    color: #ffffff;
+
+    text-decoration: none;
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+}
+
+
+.auth-brand-logo {
+
+    width: 24px;
+
+    height: 27px;
+
+    display: block;
+
+    object-fit: contain;
+
+    filter: brightness(0) invert(1);
+
+}
+
+
+/* Left Text */
+
+.auth-brand-copy {
+
+    margin: auto 0;
+
+    max-width: 360px;
+
+}
+
+
+.auth-brand-copy h1 {
+
+    margin: 0 0 18px;
+
+    max-width: 340px;
+
+    font-size: clamp(32px, 3.5vw, 46px);
+
+    line-height: 1.18;
+
+    letter-spacing: -1.8px;
+
+    font-weight: 800;
+
+}
+
+
+.auth-brand-copy h1 span {
+
+    color: #a9d8c5;
+
+}
+
+
+.auth-brand-copy p {
+
+    max-width: 340px;
+
+    margin: 0;
+
+    color: rgba(255, 255, 255, 0.78);
+
+    font-size: 14px;
+
+    line-height: 1.85;
+
+}
+
+
+/* Handwritten Text */
+
+.auth-tagline {
+
+    margin: 36px 0 0;
+
+    color: rgba(255, 255, 255, 0.9);
+
+    font-family: "Caveat", cursive;
+
+    font-size: clamp(25px, 2.6vw, 34px);
+
+    line-height: 1.2;
+
+}
+
+
+/* =========================================
+   RIGHT PANEL
+========================================= */
+
+.auth-form-panel {
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    padding: 55px 60px;
+
+    background: #ffffff;
+
+}
+
+
+/* Back Home */
+
+.auth-back-link {
+
+    align-self: flex-start;
+
+    margin-bottom: 36px;
+
+    color: #527166;
+
+    text-decoration: none;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    transition: color 0.2s ease;
+
+}
+
+
+.auth-back-link:hover {
+
+    color: #0b4d3b;
+
+}
+
+
+/* =========================================
+   TABS
+========================================= */
+
+.auth-tabs {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 4px;
+
+    padding: 4px;
+
+    margin-bottom: 30px;
+
+    border-radius: 999px;
+
+    background: #edf4f0;
+
+}
+
+
+.auth-tab {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-height: 42px;
+
+    border-radius: 999px;
+
+    color: #60756c;
+
+    text-decoration: none;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    transition: all 0.2s ease;
+
+}
+
+
+.auth-tab:hover {
+
+    color: #0b4d3b;
+
+}
+
+
+.auth-tab.is-active {
+
+    color: #0b4d3b;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 2px 9px rgba(17, 61, 47, 0.08);
+
+}
+
+
+/* =========================================
+   HEADING
+========================================= */
+
+.auth-heading {
+
+    margin-bottom: 25px;
+
+}
+
+
+.auth-heading h2 {
+
+    margin: 0 0 7px;
+
+    color: #153c30;
+
+    font-size: clamp(25px, 2.5vw, 31px);
+
+    line-height: 1.2;
+
+    letter-spacing: -1px;
+
+    font-weight: 800;
+
+}
+
+
+.auth-heading p {
+
+    margin: 0;
+
+    color: #819189;
+
+    font-size: 12px;
+
+}
+
+
+/* =========================================
+   FORM
+========================================= */
+
+.auth-form {
+
+    display: grid;
+
+    gap: 17px;
+
+}
+
+
+.auth-field {
+
+    display: grid;
+
+    gap: 8px;
+
+}
+
+
+.auth-field label {
+
+    color: #355348;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+}
+
+
+.auth-field input {
+
+    width: 100%;
+
+    min-height: 48px;
+
+    padding: 0 15px;
+
+    border: 1px solid #dce8e2;
+
+    border-radius: 10px;
+
+    outline: none;
+
+    background: #f8fbf9;
+
+    color: #1b3e32;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+
+}
+
+
+.auth-field input::placeholder {
+
+    color: #a4b2ab;
+
+}
+
+
+.auth-field input:focus {
+
+    border-color: #39866b;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 0 0 3px rgba(57, 134, 107, 0.12);
+
+}
+
+
+/* =========================================
+   ERROR MESSAGE
+========================================= */
+
+.auth-error {
+
+    margin: -2px 0 0;
+
+    padding: 11px 13px;
+
+    border: 1px solid #f6d7d7;
+
+    border-radius: 9px;
+
+    background: #fff1f1;
+
+    color: #b53b3b;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+
+}
+
+
+.auth-error[hidden] {
+
+    display: none;
+
+}
+
+
+/* =========================================
+   SIGN IN BUTTON
+========================================= */
+
+.auth-submit {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    width: 100%;
+
+    min-height: 49px;
+
+    margin-top: 2px;
+
+    border: none;
+
+    border-radius: 999px;
+
+    background: var(--green, #0B4D3B);
+
+    color: #ffffff;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+
+}
+
+
+.auth-submit:hover {
+
+    background: #083e30;
+
+    box-shadow:
+        0 8px 18px rgba(11, 77, 59, 0.17);
+
+    transform: translateY(-1px);
+
+}
+
+
+.auth-submit:focus-visible {
+
+    outline: 3px solid rgba(57, 134, 107, 0.3);
+
+    outline-offset: 3px;
+
+}
+
+
+.auth-submit:disabled {
+
+    opacity: 0.65;
+
+    cursor: wait;
+
+    transform: none;
+
+}
+
+
+/* =========================================
+   SIGN UP LINK
+========================================= */
+
+.auth-signup-prompt {
+
+    margin: 23px 0 0;
+
+    text-align: center;
+
+    color: #819189;
+
+    font-size: 11px;
+
+}
+
+
+.auth-signup-prompt a {
+
+    color: #0b4d3b;
+
+    font-weight: 700;
+
+    text-decoration: underline;
+
+}
+
+
+.auth-signup-prompt a:hover {
+
+    color: #39866b;
+
+}
+
+
+/* =========================================
+   DEMO CREDENTIALS
+========================================= */
+
+.auth-demo-hint {
+
+    margin: 22px 0 0;
+
+    text-align: center;
+
+    color: #a0ada6;
+
+    font-size: 10px;
+
+}
+
+
+/* =========================================
+   RESPONSIVE - TABLET & MOBILE
+========================================= */
+
+@media (max-width: 760px) {
+
+    .auth-screen {
+
+        padding: 18px 14px;
+
+    }
+
+
+    .auth-card {
+
+        width: min(100%, 520px);
+
+        min-height: 0;
+
+        grid-template-columns: 1fr;
+
+        border-radius: 18px;
+
+    }
+
+
+    .auth-brand-panel {
+
+        min-height: 220px;
+
+        padding: 25px 28px;
+
+    }
+
+
+    .auth-brand-copy {
+
+        margin: 28px 0 12px;
+
+    }
+
+
+    .auth-brand-copy h1 {
+
+        max-width: 420px;
+
+        font-size: 30px;
+
+    }
+
+
+    .auth-brand-copy p {
+
+        max-width: 440px;
+
+        font-size: 12px;
+
+    }
+
+
+    .auth-tagline {
+
+        margin: 8px 0 0;
+
+        font-size: 25px;
+
+    }
+
+
+    .auth-form-panel {
+
+        padding: 28px;
+
+    }
+
+
+    .auth-back-link {
+
+        margin-bottom: 22px;
+
+    }
+
+
+    .auth-tabs {
+
+        margin-bottom: 25px;
+
+    }
+
+}
+
+
+/* Small Phones */
+
+@media (max-width: 380px) {
+
+    .auth-screen {
+
+        padding: 10px;
+
+    }
+
+
+    .auth-brand-panel,
+    .auth-form-panel {
+
+        padding: 22px 19px;
+
+    }
+
+
+    .auth-field input {
+
+        min-height: 46px;
+
+    }
+
+}
