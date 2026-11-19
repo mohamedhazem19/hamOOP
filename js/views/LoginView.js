@@ -1,315 +1,252 @@
-   // Owner: Nourhan Alaa Eldin
-// HAM Hospital - Login View
+  /* =========================================
+   HAM HOSPITAL - LOGIN VIEW
+   Owner: Nourhan Alaa Eldin
+========================================= */
 
-import BaseView from './common/BaseView.js';
+export default class LoginView {
 
-export default class LoginView extends BaseView {
+    render() {
+        return `
+            <div class="auth-page">
 
-  render() {
-    return `
-      <section class="auth-screen">
+                <div class="auth-shell">
 
-        <div class="auth-card">
+                    <!-- LEFT BRAND PANEL -->
+                    <section class="auth-brand-panel">
 
-          <!-- LEFT GREEN PANEL -->
-          <aside class="auth-brand-panel">
+                        <a href="#" class="auth-brand">
+                            <svg viewBox="0 0 40 40" fill="none">
+                                <path d="M7 5C7 18 14 28 23 32C23 19 17 9 7 5Z"
+                                      fill="white"/>
+                                <path d="M33 5C33 18 26 28 17 32C17 19 23 9 33 5Z"
+                                      fill="#8ED9BA"/>
+                            </svg>
 
-            <a href="#/home" class="auth-brand">
+                            <span>HAM Hospital</span>
+                        </a>
 
-              <img
-                src="assets/images/logo.svg"
-                alt="HAM Hospital Logo"
-                class="auth-brand-logo"
-              >
+                        <div class="auth-brand-copy">
+                            <h1>
+                                Your care,
+                                <span>one click away</span>
+                            </h1>
 
-              <span>HAM Hospital</span>
+                            <p>
+                                Book visits with our doctors, track your
+                                appointments and read your medical reports
+                                anytime.
+                            </p>
+                        </div>
 
-            </a>
+                        <div class="auth-brand-footer">
+                            Your Health, Our Priority
+                        </div>
 
-            <div class="auth-brand-copy">
+                    </section>
 
-              <h1>
-                Your care,
-                <span>one click away</span>
-              </h1>
 
-              <p>
-                Book visits with our doctors, track your appointments
-                and read your medical reports anytime.
-              </p>
+                    <!-- RIGHT FORM PANEL -->
+                    <section class="auth-form-panel">
+
+                        <div class="auth-form-container">
+
+                            <a href="#" class="auth-back-link"
+                               data-home>
+                                ← Back to home
+                            </a>
+
+
+                            <!-- AUTH TABS -->
+                            <div class="auth-tabs">
+
+                                <a href="#" class="auth-tab is-active">
+                                    Sign in
+                                </a>
+
+                                <a href="#" class="auth-tab"
+                                   data-signup>
+                                    Create account
+                                </a>
+
+                            </div>
+
+
+                            <!-- HEADING -->
+                            <div class="auth-form-heading">
+
+                                <h2>Welcome back</h2>
+
+                                <p>
+                                    Sign in to manage your appointments.
+                                </p>
+
+                            </div>
+
+
+                            <!-- LOGIN FORM -->
+                            <form class="auth-form" id="loginForm">
+
+                                <div class="auth-field">
+
+                                    <label for="loginPhone">
+                                        Phone number
+                                    </label>
+
+                                    <input
+                                        type="tel"
+                                        id="loginPhone"
+                                        placeholder="Enter your phone number"
+                                        required
+                                    >
+
+                                </div>
+
+
+                                <div class="auth-field">
+
+                                    <label for="loginPassword">
+                                        Password
+                                    </label>
+
+                                    <input
+                                        type="password"
+                                        id="loginPassword"
+                                        placeholder="Enter your password"
+                                        required
+                                    >
+
+                                </div>
+
+
+                                <div class="auth-error" id="loginError">
+                                    Wrong phone number or password.
+                                </div>
+
+
+                                <div class="auth-success" id="loginSuccess">
+                                    Login successful!
+                                </div>
+
+
+                                <button
+                                    type="submit"
+                                    class="auth-submit"
+                                    id="loginButton">
+
+                                    Sign in →
+
+                                </button>
+
+                            </form>
+
+
+                            <p class="auth-switch-copy">
+
+                                New here?
+
+                                <a href="#" data-signup>
+                                    Create an account
+                                </a>
+
+                            </p>
+
+
+                            <p class="auth-switch-copy">
+                                Demo patient: 01012345678 · Password: 1234
+                            </p>
+
+                        </div>
+
+                    </section>
+
+                </div>
 
             </div>
+        `;
+    }
 
-            <p class="auth-tagline">
-              Your Health, Our Priority
-            </p>
 
-          </aside>
+    bind() {
 
+        const form = document.getElementById("loginForm");
 
-          <!-- RIGHT LOGIN PANEL -->
-          <div class="auth-form-panel">
+        const error = document.getElementById("loginError");
 
-            <!-- Back Home -->
-            <a href="#/home" class="auth-back-link">
-              <span>←</span> Back to home
-            </a>
+        const success = document.getElementById("loginSuccess");
 
+        const button = document.getElementById("loginButton");
 
-            <!-- Tabs -->
-            <nav class="auth-tabs">
 
-              <a
-                href="#/login"
-                class="auth-tab is-active"
-                aria-current="page"
-              >
-                Sign in
-              </a>
+        // GO TO SIGN UP
+        document.querySelectorAll("[data-signup]").forEach(link => {
 
-              <a
-                href="#/signup"
-                class="auth-tab"
-              >
-                Create account
-              </a>
+            link.addEventListener("click", (e) => {
 
-            </nav>
+                e.preventDefault();
 
+                Router.go("signup");
 
-            <!-- Heading -->
-            <div class="auth-heading">
+            });
 
-              <h2>Welcome back</h2>
+        });
 
-              <p>
-                Sign in to manage your appointments.
-              </p>
 
-            </div>
+        // LOGIN SUBMIT
+        form.addEventListener("submit", async (e) => {
 
+            e.preventDefault();
 
-            <!-- Login Form -->
-            <form class="auth-form" novalidate>
+            error.classList.remove("is-visible");
+            success.classList.remove("is-visible");
 
-              <!-- Phone -->
-              <div class="auth-field">
+            const phone = document.getElementById("loginPhone").value.trim();
 
-                <label for="login-phone">
-                  Phone number
-                </label>
+            const password = document.getElementById("loginPassword").value;
 
-                <input
-                  id="login-phone"
-                  name="phone"
-                  type="tel"
-                  inputmode="tel"
-                  autocomplete="username"
-                  placeholder="01012345678"
-                  required
-                >
+            button.disabled = true;
 
-              </div>
+            button.textContent = "Signing in...";
 
 
-              <!-- Password -->
-              <div class="auth-field">
+            try {
 
-                <label for="login-password">
-                  Password
-                </label>
+                const result = await AuthController.signIn(phone, password);
 
-                <input
-                  id="login-password"
-                  name="password"
-                  type="password"
-                  autocomplete="current-password"
-                  placeholder="Enter your password"
-                  required
-                >
+                success.textContent = "Login successful!";
 
-              </div>
+                success.classList.add("is-visible");
 
 
-              <!-- Error Message -->
-              <p
-                class="auth-error"
-                role="alert"
-                aria-live="polite"
-                hidden
-              ></p>
+                setTimeout(() => {
 
+                    if (result.role === "ADMIN") {
 
-              <!-- Submit -->
-              <button
-                type="submit"
-                class="auth-submit"
-              >
+                        Router.go("dashboard");
 
-                <span>Sign in</span>
+                    } else {
 
-                <span aria-hidden="true">→</span>
+                        Router.go("appointments");
 
-              </button>
+                    }
 
-            </form>
+                }, 700);
 
 
-            <!-- Create Account -->
-            <p class="auth-signup-prompt">
+            } catch (err) {
 
-              New here?
+                error.textContent =
+                    "Wrong phone number or password.";
 
-              <a href="#/signup">
-                Create an account
-              </a>
+                error.classList.add("is-visible");
 
-            </p>
+                button.disabled = false;
 
+                button.textContent = "Sign in →";
 
-            <!-- Demo Credentials -->
-            <p class="auth-demo-hint">
-              Demo patient: 01012345678 · password 1234
-            </p>
+            }
 
-          </div>
+        });
 
-        </div>
-
-      </section>
-    `;
-  }
-
-
-  bind(root) {
-
-    const form = this.$(root, '.auth-form');
-
-    const phoneInput = this.$(root, '#login-phone');
-
-    const passwordInput = this.$(root, '#login-password');
-
-    const errorMessage = this.$(root, '.auth-error');
-
-    const submitButton = this.$(root, '.auth-submit');
-
-
-    // Hide previous error when user starts another attempt
-    const hideError = () => {
-
-      errorMessage.hidden = true;
-
-      errorMessage.textContent = '';
-
-    };
-
-    phoneInput.addEventListener('input', hideError);
-
-    passwordInput.addEventListener('input', hideError);
-
-
-    // Navigation: Create Account
-    root.querySelectorAll('a[href="#/signup"]').forEach(link => {
-
-      link.addEventListener('click', event => {
-
-        event.preventDefault();
-
-        this.router.go('signup');
-
-      });
-
-    });
-
-
-    // Navigation: Home
-    root.querySelectorAll('a[href="#/home"]').forEach(link => {
-
-      link.addEventListener('click', event => {
-
-        event.preventDefault();
-
-        this.router.go('home');
-
-      });
-
-    });
-
-
-    // Login Submit
-    form.addEventListener('submit', event => {
-
-      event.preventDefault();
-
-      hideError();
-
-      const phone = phoneInput.value.trim();
-
-      const password = passwordInput.value;
-
-
-      // Prevent empty submission
-      if (!phone || !password) {
-
-        errorMessage.textContent =
-          'Wrong phone number or password.';
-
-        errorMessage.hidden = false;
-
-        return;
-
-      }
-
-
-      submitButton.disabled = true;
-
-
-      try {
-
-        // Use existing AuthController
-        const user = this.c.auth.signIn(phone, password);
-
-
-        // Navigate according to authenticated user
-        if (this.session.role === 'admin') {
-
-          this.router.go('dashboard');
-
-        }
-
-        else if (this.session.role === 'patient') {
-
-          this.router.go(
-            this.params.next || 'my-appointments'
-          );
-
-        }
-
-      }
-
-      catch (error) {
-
-        // Generic error message
-        errorMessage.textContent =
-          'Wrong phone number or password.';
-
-        errorMessage.hidden = false;
-
-        // Keep phone number unchanged
-        passwordInput.value = '';
-
-        passwordInput.focus();
-
-      }
-
-      finally {
-
-        submitButton.disabled = false;
-
-      }
-
-    });
-
-  }
+    }
 
 }
