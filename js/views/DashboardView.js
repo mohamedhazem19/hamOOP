@@ -65,6 +65,8 @@ export default class DashboardView extends BaseView {
 
   /** '2026-11-16' -> a Date at local midnight. */
   #parseDate(iso) {
+    // Patient.registeredOn is a Date object; sample appointments use 'YYYY-MM-DD' text.
+    if (iso instanceof Date) return Number.isNaN(iso.getTime()) ? null : new Date(iso.getFullYear(), iso.getMonth(), iso.getDate());
     const [y, m, d] = String(iso || '').split('-').map(Number);
     return y ? new Date(y, m - 1, d) : null;
   }
