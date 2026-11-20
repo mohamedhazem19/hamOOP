@@ -30,7 +30,7 @@ export default class AuthController {
 
     if (id.toUpperCase() === ADMIN_USERNAME) {
       if (password !== ADMIN_PASSWORD) throw new InvalidInputError(WRONG_LOGIN);
-      const admin = new Admin();
+      const admin = new Admin('admin', 'Admin', '01000000000'); // Person needs an id, a name and a valid phone
       session.start(admin);
       return admin;
     }
