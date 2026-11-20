@@ -1,4 +1,4 @@
-**
+/**
 * InvalidInputError
 * ------------------------------------------------------------------
 * Thrown whenever user input breaks a validation rule
@@ -20,7 +20,7 @@
 *   }
 * yb2 hena ana aamla class beyaaml inheritance men el built in error class 
 */
-xport class InvalidInputError extends Error {
+export default class InvalidInputError extends Error {
  /** maanaha ene baaml inheritance men el built in class
   * @param {string} message - Clear, user-friendly explanation.
   * @param {string|null} field - Which form field is wrong (optional).

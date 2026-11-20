@@ -1,8 +1,10 @@
-import { Patient } from "../models/Patient.js";
+import BaseView from "./common/BaseView.js";
 
-import { PatientController } from "../controllers/PatientController.js";
+import Patient from "../models/Patient.js";
 
-import { InvalidInputError } from "../errors/InvalidInputError.js";
+import InvalidInputError from "../errors/InvalidInputError.js";
+
+import Toast from "./common/Toast.js";
 
 
 
@@ -30,7 +32,7 @@ while admin is using the system :
 
  */
 
-export class RegistrationsView {
+export default class RegistrationsView extends BaseView {
 
   #toast;
 
@@ -50,12 +52,16 @@ export class RegistrationsView {
 
 
 
-  /** @param {{toast?: {show: Function}}} options */
+  /** The Router creates it: new RegistrationsView(ctx, params). */
+  constructor(ctx, params) {
+    super(ctx, params);
+    // Belal's Toast, once it has show(); until then messages appear under the form.
+    this.#toast = typeof Toast.show === "function" ? Toast : null;
+  }
 
-  constructor({ toast = null } = {}) {
-
-    this.#toast = toast;
-
+  /** The patients controller from app.js (Lojaine's PatientController). */
+  get #patients() {
+    return this.c.patients;
   }
 
 
@@ -64,9 +70,18 @@ export class RegistrationsView {
 
 
 
-  /** Builds the page once, refreshes the table, returns the root element. */
-
+  /** BaseView: the Router puts this HTML in the page, then calls bind(root). */
   render() {
+    return '<div class="reg-host"></div>';
+  }
+
+  /** BaseView: replace the placeholder with the page built from DOM elements. */
+  bind(root) {
+    root.querySelector(".reg-host")?.replaceWith(this.element());
+  }
+
+  /** Builds the page once, refreshes the table, returns the root element. */
+  element() {
 
     if (!this.#root) {
 
@@ -86,7 +101,7 @@ export class RegistrationsView {
 
   mount(container) {
 
-    container.replaceChildren(this.render());
+    container.replaceChildren(this.element());
 
   }
 
@@ -354,7 +369,7 @@ export class RegistrationsView {
 
 
 
-    const everyone = PatientController.all();
+    const everyone = this.#patients.all();
 
     const query = this.#searchInput.value;
 
@@ -456,7 +471,7 @@ export class RegistrationsView {
 
       cell(patient.gender),
 
-      cell(PatientController.visitCount(patient.id)),
+      cell(this.#patients.visitCount(patient.id)),
 
       registered
 
@@ -478,7 +493,7 @@ export class RegistrationsView {
 
     try {
 
-      const patient = PatientController.register({
+      const patient = this.#patients.register({
 
         name: this.#inputs.name.value,
 
@@ -528,7 +543,7 @@ export class RegistrationsView {
 
     try {
 
-      PatientController.delete(patient.id);
+      this.#patients.delete(patient.id);
 
       this.#renderTable();
 

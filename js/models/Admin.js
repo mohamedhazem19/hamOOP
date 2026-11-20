@@ -1,4 +1,4 @@
-import { Person } from "./Person.js";
+import Person from "./Person.js";
 
 
 /**
@@ -15,7 +15,7 @@ import { Person } from "./Person.js";
  *               Calling person.describe() on a Patient and on an Admin
  *               gives two different results from the same call.
  */
-export class Admin extends Person {
+export default class Admin extends Person {
   static PERMISSIONS = Object.freeze([
     "register-patients",
     "delete-patients",

@@ -1,5 +1,5 @@
-import { Person } from "./Person.js";
-import { InvalidInputError } from "../errors/InvalidInputError.js";
+import Person from "./Person.js";
+import InvalidInputError from "../errors/InvalidInputError.js";
 
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -24,7 +24,7 @@ const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", 
  *   - getRole()  : implements the abstract method from Person.
  *   - describe() : replaces Person's version with a patient-specific one.
  */
-export class Patient extends Person {
+export default class Patient extends Person {
   /** The only gender values the system accepts. */
   static GENDERS = Object.freeze(["Male", "Female"]);
 
@@ -32,6 +32,7 @@ export class Patient extends Person {
   #age;
   #gender;
   #registeredOn;
+  #password; // private: outside code can only ask checkPassword()
 
 
   /**
@@ -42,8 +43,14 @@ export class Patient extends Person {
    * @param {string} gender          "Male" or "Female"
    * @param {Date}   registeredOn    defaults to "now"
    */
-  constructor(id, name, phone, age, gender, registeredOn = new Date()) {
+  constructor(id, name, phone, age, gender, registeredOn = new Date(), password = "") {
+    // Also accepts one object, the way DataStore builds patients from sampleData.js:
+    // new Patient({ id, name, phone, age, gender, password, registeredOn })
+    if (id !== null && typeof id === "object") {
+      ({ id, name, phone, age, gender, password = "", registeredOn = new Date() } = id);
+    }
     super(id, name, phone); // Person handles id / name / phone
+    this.#password = String(password ?? "");
     this.age = age;
     this.gender = gender;
     this.registeredOn = registeredOn;
@@ -112,6 +119,16 @@ export class Patient extends Person {
       throw new InvalidInputError("Registration date is not a valid date.", "registeredOn");
     }
     this.#registeredOn = date;
+  }
+
+
+  /**
+   * Sign in check (AuthController calls this). The password itself is never
+   * returned, so it cannot be read from outside the class (encapsulation).
+   * A walk-in patient registered without a password cannot sign in.
+   */
+  checkPassword(candidate) {
+    return this.#password !== "" && this.#password === String(candidate ?? "");
   }
 
 
