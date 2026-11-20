@@ -1,4 +1,4 @@
-import { InvalidInputError } from "../errors/InvalidInputError.js";
+import InvalidInputError from "../errors/InvalidInputError.js";
 
 
 /**
@@ -30,14 +30,19 @@ import { InvalidInputError } from "../errors/InvalidInputError.js";
  *     the same call `person.describe()` gives a different result
  *     depending on the real type of the object.
  */
-export class Person {
+export default class Person {
   #id;
   #name;
   #phone;
 
 
+  /**
+   * Accepts new Person(id, name, phone) or new Person({ id, name, phone, ... }).
+   * The object form is how DataStore builds patients and doctors from sampleData.js.
+   */
   constructor(id, name, phone) {
-    
+    if (id !== null && typeof id === "object") ({ id, name, phone } = id);
+
     if (new.target === Person) {
       throw new TypeError(
         "Person is an abstract class and cannot be created directly. " +
