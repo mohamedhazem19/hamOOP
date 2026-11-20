@@ -1,4 +1,4 @@
-  // Owner: Nourhan Alaa Eldin & Rotage Waleed Ahmed (Login & Dashboard)
+// Owner: Nourhan Alaa Eldin & Rotage Waleed Ahmed (Login & Dashboard)
 // Sign in screen (#/login). The HTML is built here in JavaScript: render() returns the text,
 // bind(root) adds the listeners. Styles: css/views/auth.css (shared with SignUpView).
 //
