@@ -53,6 +53,8 @@ export default class CancelDialog extends BaseView {
     root.querySelector('.cd-backdrop')?.addEventListener('click', (e) => { if (e.target === e.currentTarget) this.close(); });
     this.#onKeydown = (e) => { if (e.key === 'Escape') this.close(); };
     document.addEventListener('keydown', this.#onKeydown);
+    // Leaving the page (another menu link) closes the dialog too.
+    window.addEventListener('hashchange', this.#onLeave, { once: true });
     root.querySelector('[data-cd="keep"]')?.focus();
   }
 
@@ -68,8 +70,11 @@ export default class CancelDialog extends BaseView {
     this.bind(host);
   }
 
+  #onLeave = () => this.close();
+
   close() {
     document.removeEventListener('keydown', this.#onKeydown);
+    window.removeEventListener('hashchange', this.#onLeave);
     if (typeof Modal.close === 'function') Modal.close();
     else if (this.#host) this.#host.innerHTML = '';
   }
