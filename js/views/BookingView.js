@@ -30,7 +30,9 @@ export default class BookingView extends AppointmentView {
 
   // ---------- Reading the other modules (Rodina's DoctorController, with the store as backup) ----------
   #departments() {
-    const list = this.c.doctors?.departments?.() ?? this.store?.hospital?.departments ?? [];
+    const list = this.c.doctors?.departments?.()
+      ?? this.store?.hospital?.departments
+      ?? [...new Set((this.store?.doctors ?? []).map((d) => d.department))];
     return list.map((d) => (typeof d === 'string' ? d : d.name));
   }
 
