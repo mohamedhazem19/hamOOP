@@ -5,6 +5,7 @@
 import AppointmentView from './AppointmentView.js';
 import CancelDialog from './CancelDialog.js';
 import { esc } from './common/BaseView.js';
+import Appointment from '../models/Appointment.js';
 
 const STEPS = ['Booked', 'Waiting', 'Visit day', 'Completed'];
 
@@ -102,7 +103,7 @@ export default class MyAppointmentsView extends AppointmentView {
 
   /** Booked ✓ → Waiting (until the day) → Visit day (today) → Completed. */
   #tracker(a, p) {
-    const days = this.today === a.date ? 0 : Math.max(1, Math.round((new Date(`${a.date}T00:00:00`) - new Date(`${this.today}T00:00:00`)) / 86400000));
+    const days = Math.max(0, Appointment.daysBetween(a.date, this.today)); // 0 = the visit is today
     const current = days > 0 ? 1 : 2; // index of the step in progress
     const sub = [
       'Confirmed by the hospital',
