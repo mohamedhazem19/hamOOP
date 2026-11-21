@@ -120,7 +120,8 @@ export default class BookingView extends AppointmentView {
   #slotButton(slot) {
     const selected = this.#choice.time === slot.time && slot.free;
     const cls = ['bk__slot', selected ? 'is-selected' : '', slot.free ? '' : 'is-taken'].filter(Boolean).join(' ');
-    const note = slot.free ? '' : `<span class="bk__slot-note">${slot.reason === 'Booked' ? 'Booked' : 'Off'}</span>`;
+    const labels = { Booked: 'Booked', 'Past date': 'Past' };
+    const note = slot.free ? '' : `<span class="bk__slot-note">${labels[slot.reason] || 'Off'}</span>`;
     return `<button type="button" class="${cls}" data-time="${esc(slot.time)}" aria-pressed="${selected}" ${slot.free ? '' : 'disabled'}>${esc(slot.time)}${note}</button>`;
   }
 
@@ -170,4 +171,3 @@ export default class BookingView extends AppointmentView {
     }
   }
 }
-
