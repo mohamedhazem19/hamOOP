@@ -1,1 +1,353 @@
-/* Owner: Rodina Elsayed Mohamed (Doctor Registration) – Doctors page and dialogs */
+/* Owner: Rodina Elsayed Mohamed (Doctor Registration) – Doctors page and the "Not available" dialog
+   Every class starts with "dr" so nothing clashes with other screens.
+   Colours come from theme.css (--green, --mint …); the second value is only a fallback
+   while the theme is not finished. */
+
+.dr,
+.dr-dialog {
+  --dr-green: var(--green, #0b4d3b);
+  --dr-mint: var(--mint, #e8f3ee);
+  --dr-ink: var(--ink, #10231c);
+  --dr-muted: var(--muted, #5b6b65);
+  --dr-line: var(--line, #e3ebe7);
+  --dr-card: var(--card, #ffffff);
+  --dr-danger: var(--danger, #b91c1c);
+  --dr-warn-ink: #9a3412;
+  --dr-warn-bg: #fff3e8;
+  --dr-warn-line: #f6d9bf;
+
+  color: var(--dr-ink);
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+/* ---------- Page ---------- */
+.dr {
+  padding: 22px 28px 28px 26px;
+  font-size: 15px;
+}
+
+.dr h1,
+.dr h2,
+.dr h3,
+.dr p {
+  margin: 0;
+}
+
+.dr-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px 24px;
+  margin-bottom: 20px;
+}
+
+.dr-title {
+  font-size: 32px;
+  line-height: 1.15;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.dr-sub {
+  margin-top: 6px;
+  color: var(--dr-muted);
+}
+
+.dr-today {
+  color: var(--dr-muted);
+  font-size: 14px;
+  padding-top: 8px;
+}
+
+.dr-foot {
+  margin-top: 26px;
+  color: var(--dr-muted);
+  font-size: 13px;
+}
+
+/* ---------- Buttons (real <button>s) ---------- */
+.dr-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 18px;
+  border: 1.5px solid transparent;
+  border-radius: 999px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+.dr-btn:focus-visible,
+.dr-field input:focus-visible,
+.dr-field select:focus-visible {
+  outline: 3px solid var(--dr-green);
+  outline-offset: 2px;
+}
+
+.dr-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dr-btn--primary {
+  background: var(--dr-green);
+  color: #fff;
+}
+.dr-btn--primary:hover { background: var(--green-dark, #083b2d); }
+
+.dr-btn--outline {
+  background: #fff;
+  color: var(--dr-green);
+  border-color: var(--dr-green);
+}
+.dr-btn--outline:hover { background: var(--dr-mint); }
+
+.dr-btn--upload {
+  background: #f6fbf8;
+  color: var(--dr-green);
+  border: 1.5px dashed #9fcdb9;
+}
+.dr-btn--upload:hover { background: var(--dr-mint); }
+
+.dr-btn--warn {
+  background: var(--dr-warn-bg);
+  color: var(--dr-warn-ink);
+  border-color: var(--dr-warn-line);
+}
+.dr-btn--warn:hover { background: #ffe6d0; }
+
+.dr-btn--danger {
+  width: auto;
+  background: #9a3412;
+  color: #fff;
+}
+.dr-btn--danger:hover:not(:disabled) { background: #7c2a0e; }
+
+/* ---------- Form fields ---------- */
+.dr-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-weight: 600;
+  min-width: 0;
+}
+
+.dr-field input,
+.dr-field select {
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 16px;
+  border: 1.5px solid var(--field-line, #cfe0d8);
+  border-radius: 14px;
+  background: #fff;
+  color: var(--dr-ink);
+  font: inherit;
+  font-weight: 400;
+  box-sizing: border-box;
+}
+
+.dr-field [aria-invalid='true'] {
+  border-color: var(--dr-danger);
+}
+
+/* ---------- Add doctor (admin) ---------- */
+.dr-add {
+  background: var(--dr-card);
+  border: 1px solid var(--dr-line);
+  border-radius: 24px;
+  padding: 26px 30px 28px;
+  margin-bottom: 26px;
+}
+
+.dr-add__title {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 14px;
+}
+
+.dr-add__row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 16px;
+  align-items: end;
+}
+
+/* ---------- Filter by department ---------- */
+.dr-filter {
+  max-width: 260px;
+  margin-bottom: 20px;
+}
+
+.dr-empty {
+  grid-column: 1 / -1;
+  padding: 28px;
+  border: 1px dashed var(--dr-line);
+  border-radius: 20px;
+  color: var(--dr-muted);
+  text-align: center;
+}
+
+/* ---------- Messages ---------- */
+.dr-error {
+  margin-top: 14px;
+  color: var(--dr-danger);
+  font-weight: 600;
+}
+
+.dr-status {
+  margin-bottom: 18px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  font-weight: 600;
+}
+.dr-status--ok { background: var(--dr-mint); color: var(--dr-green); }
+.dr-status--err { background: #fde8e8; color: var(--dr-danger); }
+
+.dr-note {
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--dr-line);
+  background: var(--dr-mint);
+  color: var(--dr-green);
+  font-weight: 600;
+}
+.dr-note--warn,
+.dr-note--off {
+  background: var(--dr-warn-bg);
+  border-color: var(--dr-warn-line);
+  color: var(--dr-warn-ink);
+}
+
+/* ---------- Cards ---------- */
+.dr-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 22px;
+}
+
+.dr-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--dr-card);
+  border: 1px solid var(--dr-line);
+  border-radius: 28px;
+  padding: 22px 22px 24px;
+}
+
+.dr-card__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dr-card__photo {
+  flex: none;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 3px solid var(--dr-line);
+  object-fit: cover;
+  background: var(--dr-mint);
+}
+
+.dr-card__name {
+  font-size: 17px;
+  line-height: 1.2;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.dr-badge {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 999px;
+  background: var(--dr-mint);
+  color: var(--dr-green);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.dr-card__line {
+  color: var(--dr-muted);
+  font-size: 14px;
+}
+
+.dr-card .dr-btn:first-of-type {
+  margin-top: auto; /* buttons line up at the bottom of every card in a row */
+}
+
+.dr-card__hours,
+.dr-card__off {
+  color: var(--dr-muted);
+  font-size: 13px;
+}
+.dr-card__off { color: var(--dr-warn-ink); font-weight: 600; }
+
+.dr-meter {
+  height: 10px;
+  border-radius: 999px;
+  background: #eef3f0;
+  overflow: hidden;
+}
+.dr-meter span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--dr-green);
+}
+
+/* ---------- "Not available" dialog (native <dialog>) ---------- */
+.dr-dialog {
+  width: min(540px, calc(100vw - 32px));
+  padding: 30px 34px 32px;
+  border: 0;
+  border-radius: 30px;
+  background: #fff;
+  box-shadow: 0 24px 60px rgba(16, 35, 28, 0.3);
+  box-sizing: border-box;
+}
+.dr-dialog::backdrop { background: rgba(16, 35, 28, 0.6); }
+
+.dr-dialog__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dr-dialog__title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.dr-dialog .dr-note,
+.dr-dialog .dr-error { margin: 0; }
+
+.dr-dialog__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+}
+.dr-dialog__actions .dr-btn--outline { width: auto; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .dr-card { transition: box-shadow 0.2s ease, transform 0.2s ease; }
+  .dr-card:hover { box-shadow: 0 10px 28px rgba(11, 77, 59, 0.1); transform: translateY(-2px); }
+}
+
+@media (max-width: 600px) {
+  .dr { padding: 18px 16px 24px; }
+  .dr-title { font-size: 26px; }
+  .dr-add { padding: 20px 18px 22px; }
+  .dr-dialog { padding: 24px 20px 26px; }
+  .dr-dialog__actions .dr-btn { width: 100%; }
+}
