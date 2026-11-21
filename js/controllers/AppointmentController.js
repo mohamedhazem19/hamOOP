@@ -55,14 +55,17 @@ export default class AppointmentController {
   /**
    * The 8 slots of one doctor on one day.
    * @returns {{time: string, free: boolean, reason: string}[]}  reason is '' when free, otherwise
-   *          'Booked' or 'Doctor not available'.
+   *          'Booked', 'Doctor not available' or 'Past date'.
+   *          A cancelled visit frees its slot; a scheduled or completed visit keeps it taken.
    * @throws {InvalidInputError} unknown doctor or a date that is not a real day
    */
   freeSlots(doctorId, date) {
     const doctor = this.#doctor(doctorId);
     const day = Appointment.checkDate(date);
+    const past = day < isoDate(0);
     const off = this.#isOff(doctor, day);
     return Appointment.SLOTS.map((time) => {
+      if (past) return { time, free: false, reason: 'Past date' };
       if (off) return { time, free: false, reason: 'Doctor not available' };
       const taken = this.#doctorHas(doctorId, day, time);
       return { time, free: !taken, reason: taken ? 'Booked' : '' };
@@ -146,14 +149,14 @@ export default class AppointmentController {
     return typeof doctor.isAvailable === 'function' ? !doctor.isAvailable(day) : false;
   }
 
-  /** Does this doctor already have a scheduled visit at that time? (ignoreId = the visit being moved) */
+  /** Does this doctor already have a visit at that time? Cancelled visits do not count. (ignoreId = the visit being moved) */
   #doctorHas(doctorId, date, time, ignoreId = null) {
-    return this.#store.appointments.some((a) => a.isScheduled && a.id !== ignoreId
+    return this.#store.appointments.some((a) => !a.isCancelled && a.id !== ignoreId
       && a.doctorId === doctorId && a.date === date && a.time === time);
   }
 
   #patientHas(patientId, date, time, ignoreId = null) {
-    return this.#store.appointments.some((a) => a.isScheduled && a.id !== ignoreId
+    return this.#store.appointments.some((a) => !a.isCancelled && a.id !== ignoreId
       && a.patientId === patientId && a.date === date && a.time === time);
   }
 
