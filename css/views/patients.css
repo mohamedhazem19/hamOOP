@@ -1,1 +1,232 @@
-/* Owner: Lojaine Ahmed Mohamed (Patient Module) – Registrations */
+/* Owner: Lojaine Ahmed Mohamed (192400271) */
+/* ==========================================================
+   patients.css  -  Registrations screen (RegistrationsView)
+   Everything is scoped under .registrations-view so it cannot
+   change teammates' screens. Colours use the project's variables
+   when they exist (--ham-*) and fall back to the PDF's palette.
+   ========================================================== */
+
+.registrations-view {
+  --reg-green: var(--ham-green, #0e4d3c);
+  --reg-green-soft: var(--ham-green-soft, #e6f0eb);
+  --reg-text: var(--ham-text, #14231d);
+  --reg-muted: var(--ham-muted, #6f7f78);
+  --reg-line: var(--ham-line, #e3e9e5);
+  --reg-surface: var(--ham-surface, #ffffff);
+  --reg-danger: var(--ham-danger, #c0392b);
+  --reg-danger-soft: var(--ham-danger-soft, #f6d9d5);
+  --reg-success: var(--ham-success, #1b7a4f);
+
+  color: var(--reg-text);
+  font-size: 14px;
+}
+
+/* ---------- Page header ---------- */
+.registrations-view .reg-page-header h1 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.registrations-view .reg-page-header p {
+  margin: 2px 0 18px;
+  font-size: 12px;
+  color: var(--reg-muted);
+}
+
+/* ---------- Cards ---------- */
+.registrations-view .reg-card {
+  background: var(--reg-surface);
+  border: 1px solid var(--reg-line);
+  border-radius: 18px;
+  padding: 18px 20px 20px;
+  margin-bottom: 18px;
+}
+.registrations-view .reg-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.registrations-view .reg-card-head h2 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* ---------- Form ---------- */
+.registrations-view .reg-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1.1fr) auto;
+  gap: 14px;
+  align-items: end;
+}
+.registrations-view .reg-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+.registrations-view .reg-field label {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.registrations-view input,
+.registrations-view select {
+  font: inherit;
+  color: var(--reg-text);
+  height: 38px;
+  padding: 0 12px;
+  background: var(--reg-surface);
+  border: 1px solid var(--reg-line);
+  border-radius: 10px;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+.registrations-view input::placeholder {
+  color: #a3b0aa;
+}
+.registrations-view input:focus-visible,
+.registrations-view select:focus-visible,
+.registrations-view button:focus-visible {
+  outline: 2px solid var(--reg-green);
+  outline-offset: 2px;
+}
+.registrations-view .is-invalid {
+  border-color: var(--reg-danger);
+  background: #fff8f7;
+}
+
+.registrations-view .reg-form-message {
+  margin: 10px 0 0;
+  font-size: 12.5px;
+}
+.registrations-view .reg-form-message:empty {
+  display: none; /* no blank gap under the form when there is no message */
+}
+.registrations-view .reg-form-message.is-error {
+  color: var(--reg-danger);
+}
+.registrations-view .reg-form-message.is-success {
+  color: var(--reg-success);
+}
+
+/* ---------- Buttons ---------- */
+.registrations-view .reg-btn-primary {
+  font: inherit;
+  font-weight: 600;
+  height: 38px;
+  padding: 0 28px;
+  color: #fff;
+  background: var(--reg-green);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.registrations-view .reg-btn-primary:hover {
+  filter: brightness(1.15);
+}
+
+.registrations-view .reg-btn-delete {
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  color: var(--reg-danger);
+  background: var(--reg-surface);
+  border: 1px solid var(--reg-danger-soft);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.registrations-view .reg-btn-delete:hover {
+  background: #fdf0ee;
+}
+
+/* ---------- Search ---------- */
+.registrations-view .reg-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.registrations-view .reg-search input {
+  width: 190px;
+  height: 32px;
+  font-weight: 400;
+  border-radius: 999px;
+}
+
+/* ---------- Table ---------- */
+.registrations-view .reg-table-scroll {
+  overflow-x: auto;
+}
+.registrations-view .reg-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 640px;
+}
+.registrations-view .reg-table th {
+  text-align: left;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--reg-muted);
+  padding: 6px 8px 8px 0;
+  border-bottom: 1px solid var(--reg-line);
+}
+.registrations-view .reg-table td {
+  padding: 12px 8px 12px 0;
+  border-bottom: 1px solid var(--reg-line);
+  font-size: 12.5px;
+  vertical-align: middle;
+}
+.registrations-view .reg-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+.registrations-view .reg-table .reg-id {
+  color: var(--reg-muted);
+}
+.registrations-view .reg-table .reg-name {
+  font-weight: 700;
+}
+.registrations-view .reg-registered {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  color: var(--reg-muted);
+  font-size: 11.5px;
+}
+.registrations-view .reg-empty {
+  text-align: center;
+  color: var(--reg-muted);
+  padding: 28px 0;
+}
+
+/* ---------- Small screens ---------- */
+@media (max-width: 860px) {
+  .registrations-view .reg-form {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .registrations-view .reg-btn-primary {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 520px) {
+  .registrations-view .reg-form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .registrations-view .reg-search {
+    width: 100%;
+  }
+  .registrations-view .reg-search input {
+    flex: 1;
+  }
+}
