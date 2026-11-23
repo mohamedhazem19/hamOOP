@@ -9,6 +9,7 @@ import session from '../session.js';
 import Router from '../router.js';
 import AuthController from '../controllers/AuthController.js';
 import PatientController from '../controllers/PatientController.js';
+import StatsController from '../controllers/StatsController.js';
 
 const results = [];
 class Waiting extends Error {}
@@ -114,6 +115,32 @@ check('Router: a screen that is not built yet shows a friendly page', () => {
 // ---------- Teammates: add your checks below ----------
 // Lojaine (PatientController) · Rodina (DoctorController) · Malak (AppointmentController)
 // Loay (ReportController) · Wagdy & Belal (StatsController)
+
+// ---------- Wagdy & Belal: StatsController ----------
+check('Stats: revenue counts completed visits only (sample data = 1,400 EGP)', () => {
+  const { store } = fresh();
+  const stats = new StatsController(store);
+  assert(stats.revenue() === 1400, `revenue was ${stats.revenue()}`);
+  const sum = stats.summary();
+  assert(sum.completed === 4 && sum.upcoming === 6 && sum.cancelled === 1, 'completed 4, upcoming 6, cancelled 1');
+  assert(sum.total === 10, 'total = scheduled + completed (cancelled not counted)');
+});
+check('Stats: one row per doctor and per department', () => {
+  const { store } = fresh();
+  const stats = new StatsController(store);
+  const d1 = stats.perDoctor().find((r) => r.doctor.id === 'd1');
+  assert(d1.total === 4 && d1.completed === 2 && d1.revenue === 800, 'Dr. Ahmed Fathy: 4 visits, 2 completed, 800 EGP');
+  const depts = stats.perDepartment();
+  assert(depts.length === 4 && depts.every((r) => r.doctors === 1), '4 departments, 1 doctor each');
+  assert(depts.reduce((t, r) => t + r.revenue, 0) === stats.revenue(), 'departments add up to the revenue');
+});
+check('Stats: a cancelled visit never adds revenue', () => {
+  const { store } = fresh();
+  const stats = new StatsController(store);
+  const before = stats.revenue();
+  store.appointments.find((a) => a.id === 'a1').cancel('Patient request');
+  assert(stats.revenue() === before && stats.summary().cancelled === 2);
+});
 
 session.end();
 
