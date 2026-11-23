@@ -1,1 +1,88 @@
-/* Owner: Mohammed Wagdy Abdellalem & Belal Mohamed Ahmed (GUI general) – Statistics */
+/* Owner: Mohammed Wagdy Abdellalem & Belal Mohamed Ahmed (GUI general) – Statistics
+   Every class starts with "st" so nothing clashes with other screens.
+   Colours come from theme.css (--green, --mint …); the second value is only a backup. */
+
+.st {
+  --st-green: var(--green, #0b4d3b);
+  --st-soft: var(--green-soft, #2f9e74);
+  --st-mint: var(--mint, #e8f3ee);
+  --st-ink: var(--ink, #10231c);
+  --st-muted: var(--muted, #4b5f57);
+  --st-line: var(--line, #e3ebe7);
+  --st-card: var(--card, #ffffff);
+
+  color: var(--st-ink);
+  padding: 28px 32px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.st h1, .st h2, .st p { margin: 0; }
+
+/* ---------- Header ---------- */
+.st-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.st-title { font-size: 26px; font-weight: 800; letter-spacing: -0.01em; }
+.st-sub, .st-date { color: var(--st-muted); font-size: 13px; }
+.st-sub { margin-top: 2px; }
+
+/* ---------- Number tiles ---------- */
+.st-tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.st-tile {
+  display: flex; flex-direction: column; gap: 4px; padding: 18px 20px;
+  background: var(--st-card); border: 1px solid var(--st-line); border-radius: 18px;
+}
+.st-tile__label { font-size: 12px; font-weight: 600; color: var(--st-muted); }
+.st-tile__value { font-size: 28px; font-weight: 800; line-height: 1.1; color: var(--st-green); }
+.st-tile__note { font-size: 12px; color: var(--st-muted); }
+.st-tile--main { background: var(--st-green); border-color: var(--st-green); }
+.st-tile--main .st-tile__label, .st-tile--main .st-tile__note { color: #cfe6dc; }
+.st-tile--main .st-tile__value { color: #fff; }
+
+/* ---------- Cards ---------- */
+.st-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.st-card { background: var(--st-card); border: 1px solid var(--st-line); border-radius: 18px; padding: 20px; min-width: 0; }
+.st-card--wide { grid-column: 1 / -1; }
+.st-card__title { font-size: 15px; font-weight: 700; }
+
+.st-legend { display: flex; gap: 16px; margin: 6px 0 14px !important; font-size: 12px; color: var(--st-muted); }
+.st-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.st-key { display: inline-block; width: 12px; height: 12px; border-radius: 4px; }
+.st-key--done { background: var(--st-green); }
+.st-key--all { background: var(--st-soft); opacity: 0.45; }
+
+/* ---------- Bars ---------- */
+.st-bars { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+.st-bar { display: grid; grid-template-columns: minmax(110px, 0.9fr) minmax(0, 2fr) 28px; align-items: center; gap: 12px; }
+.st-bar__label { display: flex; flex-direction: column; min-width: 0; font-size: 13px; }
+.st-bar__label strong { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.st-bar__label span { color: var(--st-muted); font-size: 11.5px; }
+.st-bar__track { height: 14px; border-radius: 999px; background: var(--st-mint); overflow: hidden; }
+.st-bar__fill { height: 100%; border-radius: 999px; background: rgba(47, 158, 116, 0.45); min-width: 4px; }
+.st-bar__done { height: 100%; border-radius: 999px; background: var(--st-green); }
+.st-bar__value { font-weight: 700; text-align: right; font-size: 14px; }
+.st-empty { color: var(--st-muted); }
+
+/* ---------- Income table ---------- */
+.st-table-scroll { overflow-x: auto; margin-top: 10px; }
+.st-table { width: 100%; border-collapse: collapse; min-width: 560px; font-size: 13px; }
+.st-table th, .st-table td { text-align: left; padding: 11px 10px 11px 0; border-bottom: 1px solid var(--st-line); }
+.st-table thead th { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--st-muted); }
+.st-table tfoot th, .st-table tfoot td { border-bottom: 0; font-weight: 700; padding-top: 14px; }
+.st-num { text-align: right !important; font-variant-numeric: tabular-nums; }
+.st-strong { font-weight: 700; }
+
+.st-foot { color: var(--st-muted); font-size: 12px; }
+
+/* ---------- Smaller screens ---------- */
+@media (max-width: 1100px) {
+  .st-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .st-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 860px) {
+  .st { padding: 20px 16px 32px; }
+}
+@media (max-width: 480px) {
+  .st-tiles { grid-template-columns: minmax(0, 1fr); }
+  .st-bar { grid-template-columns: minmax(0, 1fr) 28px; }
+  .st-bar__track { grid-column: 1 / -1; grid-row: 2; }
+}
