@@ -20,10 +20,9 @@ All data lives in memory in the **DataStore**, filled from `js/store/sampleData.
 5. Open `tests.html` with Live Server. Green = passed, red = failed, yellow = waiting for a teammate's code.
    No red before you open a Pull Request.
 
-**Right now only the team leader's part is written** (page, router, session, data store, sign in).
-Every other file is an **empty shell**: it has the owner, the class name and a `TODO` list – nothing else.
-Pages whose screen is not written yet show *"Not built yet"*. Admin sign in (`ADMIN` / `1234`) works today;
-patient sign in starts working once Lojaine writes `PatientController.findByPhone()`.
+**Every screen is built.** Guests see Home, Sign in and Create account; patients see My Appointments,
+My Reports, Doctors and Book Appointment; the admin sees Dashboard, Registrations, Doctors, Appointments,
+Medical Reports and Statistics. `tests.html` runs 36 checks (all green).
 
 Tip: in the browser console, type `ham.store`, `ham.controllers` or `ham.session` to inspect the data.
 
@@ -37,8 +36,8 @@ Tip: in the browser console, type `ham.store`, `ham.controllers` or `ham.session
 | Nourhan Alaa Eldin | Login & Dashboard (coding) – leads Sign in | `js/views/LoginView.js`, `js/views/DashboardView.js`, `css/views/auth.css`, `css/views/dashboard.css` |
 | Rotage Waleed Ahmed | Login & Dashboard (coding) – leads Create account | `js/views/SignUpView.js`, `js/views/DashboardView.js`, `css/views/auth.css`, `css/views/dashboard.css` |
 | Lojaine Ahmed Mohamed | Patient Module (coding) – registrations | `js/models/Person.js`, `Patient.js`, `Admin.js`, `js/controllers/PatientController.js`, `js/errors/InvalidInputError.js`, `js/views/RegistrationsView.js`, `css/views/patients.css` |
-| Loay Hossam | Patient Module (coding) – reports & scans | `js/models/MedicalReport.js`, `Scan.js`, `js/controllers/ReportController.js`, `js/views/ReportsView.js`, `ScanViewer.js` (new), `ReportEditorView.js`, `css/views/reports.css`, `assets/images/scans/` |
-| Rodina Elsayed Mohamed | Doctor Registration (coding) | `js/models/Doctor.js`, `GeneralDoctor.js`, `SpecialistDoctor.js`, `Department.js`, `Hospital.js`, `Schedulable.js`, `js/controllers/DoctorController.js`, `js/views/DoctorsView.js`, `css/views/doctors.css`, `assets/images/doctors/` |
+| Loay Hossam | Patient Module (coding) – reports & scans | `js/models/MedicalReport.js`, `Scan.js`, `js/controllers/ReportController.js`, `js/views/ReportsView.js`, `ReportDetails.js`, `ReportEditorView.js`, `css/views/reports.css`, `assets/images/scans/` |
+| Rodina Elsayed Mohamed | Doctor Registration (coding) | `js/models/Doctor.js`, `GeneralDoctor.js`, `SpecialistDoctor.js`, `Department.js`, `Hospital.js`, `Schedulable.js`, `js/controllers/DoctorController.js`, `js/views/DoctorsView.js`, `DoctorCard.js`, `UnavailableDialog.js`, `css/views/doctors.css`, `assets/images/doctors/` |
 | Malak Sherif Gamal Eldeen | Booking & Schedule (coding) | `js/models/Appointment.js`, `js/controllers/AppointmentController.js`, `js/errors/SlotUnavailableError.js`, `DoctorUnavailableError.js`, `js/views/BookingView.js`, `MyAppointmentsView.js`, `AppointmentsView.js`, `css/views/booking.css` |
 | Mohammed Wagdy Abdellalem | GUI (general) – theme, components, Home layout, Statistics | `css/theme.css`, `js/views/common/BaseView.js`, `Sidebar.js`, `js/views/HomeView.js`, `css/views/home.css`, `js/controllers/StatsController.js`, `js/views/StatisticsView.js`, `css/views/stats.css` |
 | Belal Mohamed Ahmed | GUI (general) – animations, Toast, Modal, images, phone layout | `css/animations.css`, `css/responsive.css`, `js/views/common/Toast.js`, `Modal.js`, `animate.js`, `assets/images/`, Home animations |
@@ -98,8 +97,8 @@ Dates are strings `'YYYY-MM-DD'`, times are `'HH:MM'`. Use `isoDate(0)` from `sa
 
 **One time:**
 ```bash
-git clone https://github.com/<team-account>/ham-frontend.git
-cd ham-frontend
+git clone https://github.com/mohamedhazem19/hamOOP.git
+cd hamOOP
 ```
 
 **Every task:**
@@ -147,4 +146,4 @@ Suggested branch names: `feature/login-nourhan`, `feature/signup-rotage`, `featu
 | 6 | Presentation `TeamName_ProjectName_Presentation.pptx` + code `TeamName_ProjectName_Code.zip`; publish with GitHub Pages |
 
 ### Publish with GitHub Pages
-Repo → **Settings → Pages** → Source: *Deploy from a branch* → Branch: `main` / root → Save. The app appears at `https://<team-account>.github.io/ham-frontend/`.
+Repo → **Settings → Pages** → Source: *Deploy from a branch* → Branch: `main` / root → Save. The app appears at `https://mohamedhazem19.github.io/hamOOP/`.
