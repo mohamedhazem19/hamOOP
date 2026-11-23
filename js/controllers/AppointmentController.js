@@ -31,15 +31,6 @@ export default class AppointmentController {
     return `${now.getFullYear()}-${mm}-${dd}`;
   }
 
-  #currentTime() {
-    const now = this.#now();
-    return `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-  }
-
-  #isPastSlot(date, time) {
-    return date === this.#today() && time <= this.#currentTime();
-  }
-
   // =====================================================================
   //  Reading
   // =====================================================================
@@ -85,7 +76,6 @@ export default class AppointmentController {
     return Appointment.SLOTS.map((time) => {
       if (past) return { time, free: false, reason: 'Past date' };
       if (off) return { time, free: false, reason: 'Doctor not available' };
-      if (this.#isPastSlot(day, time)) return { time, free: false, reason: 'Past time' };
       const taken = this.#doctorHas(doctorId, day, time);
       return { time, free: !taken, reason: taken ? 'Booked' : '' };
     });
@@ -186,7 +176,6 @@ export default class AppointmentController {
     const day = Appointment.checkDate(date);
     const slot = Appointment.checkTime(time);
     if (day < this.#today()) throw new InvalidInputError('You cannot book a date in the past.');
-    if (this.#isPastSlot(day, slot)) throw new InvalidInputError('You cannot book a time that has already passed.');
     if (this.#isOff(doctor, day)) {
       throw new DoctorUnavailableError(`${doctor.name} is not available on this day. Please choose another date.`);
     }
