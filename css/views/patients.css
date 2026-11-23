@@ -3,22 +3,24 @@
    patients.css  -  Registrations screen (RegistrationsView)
    Everything is scoped under .registrations-view so it cannot
    change teammates' screens. Colours use the project's variables
-   when they exist (--ham-*) and fall back to the PDF's palette.
+   from theme.css (--green, --mint, --ink ...); the second value is only a backup.
    ========================================================== */
 
 .registrations-view {
-  --reg-green: var(--ham-green, #0e4d3c);
-  --reg-green-soft: var(--ham-green-soft, #e6f0eb);
-  --reg-text: var(--ham-text, #14231d);
-  --reg-muted: var(--ham-muted, #6f7f78);
-  --reg-line: var(--ham-line, #e3e9e5);
-  --reg-surface: var(--ham-surface, #ffffff);
-  --reg-danger: var(--ham-danger, #c0392b);
-  --reg-danger-soft: var(--ham-danger-soft, #f6d9d5);
-  --reg-success: var(--ham-success, #1b7a4f);
+  --reg-green: var(--green, #0e4d3c);
+  --reg-green-soft: var(--mint, #e6f0eb);
+  --reg-text: var(--ink, #14231d);
+  --reg-muted: var(--muted, #6f7f78);
+  --reg-line: var(--line, #e3e9e5);
+  --reg-surface: var(--card, #ffffff);
+  --reg-danger: var(--danger, #c0392b);
+  --reg-danger-soft: #f6d9d5;
+  --reg-success: var(--ok, #1b7a4f);
 
   color: var(--reg-text);
   font-size: 14px;
+  display: block;
+  padding: 28px 32px 40px;
 }
 
 /* ---------- Page header ---------- */
@@ -212,6 +214,9 @@
 
 /* ---------- Small screens ---------- */
 @media (max-width: 860px) {
+  .registrations-view {
+    padding: 20px 16px 32px;
+  }
   .registrations-view .reg-form {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
