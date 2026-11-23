@@ -205,27 +205,26 @@ check('book(): past dates, bad times, unknown people are refused and nothing is 
   assert(ac.all().length === before, 'nothing saved');
 });
 
-check('book(): rejects a slot whose time has already passed today', () => {
+check('book(): any slot today can be booked, even late in the evening', () => {
   const { store } = bookingSetup();
-  const todayAtTenFifteen = new Date(); todayAtTenFifteen.setHours(10, 15, 0, 0);
-  const ac = new AppointmentController(store, () => new Date(todayAtTenFifteen));
-  assert(errorOf(() => ac.book('p1', 'd4', isoDate(0), '09:30')) instanceof InvalidInputError, '09:30 has passed');
-  assert(errorOf(() => ac.book('p1', 'd4', isoDate(0), '10:00')) instanceof InvalidInputError, '10:00 has passed');
+  const todayEvening = new Date(); todayEvening.setHours(19, 35, 0, 0);
+  const ac = new AppointmentController(store, () => new Date(todayEvening));
+  const appointment = ac.book('p1', 'd4', isoDate(0), '09:30');
+  assert(appointment.isScheduled && appointment.time === '09:30', '09:30 today booked at 19:35');
 });
-check('book(): still accepts a future slot later today', () => {
+check('book(): a date before today is still refused', () => {
   const { store } = bookingSetup();
-  const todayAtTenFifteen = new Date(); todayAtTenFifteen.setHours(10, 15, 0, 0);
-  const ac = new AppointmentController(store, () => new Date(todayAtTenFifteen));
-  const appointment = ac.book('p1', 'd4', isoDate(0), '11:00');
-  assert(appointment.isScheduled && appointment.time === '11:00', 'future slot booked');
+  const todayEvening = new Date(); todayEvening.setHours(19, 35, 0, 0);
+  const ac = new AppointmentController(store, () => new Date(todayEvening));
+  assert(errorOf(() => ac.book('p1', 'd4', isoDate(-1), '11:00')) instanceof InvalidInputError, 'yesterday refused');
 });
-check('freeSlots(): marks earlier slots today as Past time and leaves future slots available', () => {
+check('freeSlots(): every slot today is open unless already booked', () => {
   const { store } = bookingSetup();
-  const todayAtTenFifteen = new Date(); todayAtTenFifteen.setHours(10, 15, 0, 0);
-  const ac = new AppointmentController(store, () => new Date(todayAtTenFifteen));
+  const todayEvening = new Date(); todayEvening.setHours(19, 35, 0, 0);
+  const ac = new AppointmentController(store, () => new Date(todayEvening));
   const slots = ac.freeSlots('d4', isoDate(0));
-  assert(['09:00', '09:30', '10:00'].every((t) => slots.find((s) => s.time === t)?.reason === 'Past time'), 'earlier slots closed');
-  assert(slots.find((s) => s.time === '11:00')?.free === true, 'future slot remains free');
+  assert(slots.every((s) => s.free || s.reason === 'Booked'), 'no slot closed because of the time of day');
+  assert(slots.find((s) => s.time === '09:00')?.free === true, '09:00 is free in the evening');
 });
 
 check('cancel(): stores the status and the reason', () => {
