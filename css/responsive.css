@@ -1,2 +1,17 @@
-/* Owner: Belal Mohamed Ahmed (GUI general)
-   TODO(Belal): phone-size layout – sidebar stacks on top, tables scroll sideways. */
+/* Owner: Belal Mohamed Ahmed (GUI general) – phone layout */
+@media (max-width:900px){
+  .hero,.about,.why{grid-template-columns:1fr!important}
+  .dept-grid,.numbers,.why-grid{grid-template-columns:repeat(2,1fr)!important}
+}
+@media (max-width:720px){
+  .app,.layout{display:block!important}
+  .sidebar{width:100%!important;position:static!important;display:flex;flex-wrap:wrap;gap:6px;padding:10px}
+  table{display:block;overflow-x:auto;white-space:nowrap;max-width:100%}
+  .topbar-links{display:none}
+  .hero h1{font-size:2.1rem!important}
+  .cta{flex-direction:column;text-align:center}
+}
+@media (max-width:480px){
+  .dept-grid,.numbers,.why-grid{grid-template-columns:1fr!important}
+  .modal-box{border-radius:14px;padding:16px}
+}
