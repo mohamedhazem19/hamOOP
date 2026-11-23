@@ -54,8 +54,8 @@ export function createSampleData(from = new Date()) {
         prescriptions: [{ name: 'Pain relief tablets', how: 'As directed on the pack, after meals, only when needed' },
                         { name: 'Calcium + Vitamin D', how: 'Once daily for 6 weeks' }],
         scans: [
-          { id: 's1', type: 'xray', name: 'X-ray – Left wrist (PA view)', finding: 'Thin non-displaced fracture line at the distal radius.', imagePath: 'assets/images/scans/xray-wrist.png' },
-          { id: 's2', type: 'dexa', name: 'Bone density (DEXA) – Lumbar spine', finding: 'Normal bone density for age (T-score −0.8).', imagePath: 'assets/images/scans/dexa-spine.png' },
+          { id: 's1', type: 'xray', name: 'X-ray – Left wrist (PA view)', finding: 'Thin non-displaced fracture line at the distal radius.', imagePath: 'assets/images/scans/xray-wrist.svg' },
+          { id: 's2', type: 'dexa', name: 'Bone density (DEXA) – Lumbar spine', finding: 'Normal bone density for age (T-score −0.8).', imagePath: 'assets/images/scans/dexa-spine.svg' },
         ],
       },
       {
@@ -65,8 +65,8 @@ export function createSampleData(from = new Date()) {
         notes: 'ECG normal sinus rhythm. Total cholesterol a little high: diet advice and walking 30 minutes a day.',
         prescriptions: [{ name: 'No medication needed', how: 'Diet and exercise advice only' }],
         scans: [
-          { id: 's3', type: 'ecg', name: 'ECG – Resting, Lead II', finding: 'Normal sinus rhythm at 72 bpm.', imagePath: 'assets/images/scans/ecg.png' },
-          { id: 's4', type: 'lab', name: 'Blood test – CBC & lipids', finding: 'All normal except total cholesterol 212 mg/dL.', imagePath: 'assets/images/scans/blood-test.png' },
+          { id: 's3', type: 'ecg', name: 'ECG – Resting, Lead II', finding: 'Normal sinus rhythm at 72 bpm.', imagePath: 'assets/images/scans/ecg.svg' },
+          { id: 's4', type: 'lab', name: 'Blood test – CBC & lipids', finding: 'All normal except total cholesterol 212 mg/dL.', imagePath: 'assets/images/scans/blood-test.svg' },
         ],
       },
     ],
