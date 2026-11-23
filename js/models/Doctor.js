@@ -1,5 +1,6 @@
 // Owner: Rodina Elsayed Mohamed (Doctor Registration)
 import Person from './Person.js';
+import Schedulable from './Schedulable.js';
 import InvalidInputError from '../errors/InvalidInputError.js';
 
 /**
@@ -24,13 +25,15 @@ import InvalidInputError from '../errors/InvalidInputError.js';
  * INHERITANCE
  *   - Doctor extends Person, so id, name, phone and their validation
  *     are reused, not copied.
+ *   - Schedulable(Person) is a MIXIN: it adds workingHours and getSlots(date),
+ *     which the Doctors page cards use (JavaScript has no interfaces).
  *
  * POLYMORPHISM
  *   - calculateFee(), describe() and toJSON() are overridden or
  *     completed by the subclasses; the same call gives a result that
  *     depends on the real type of the doctor.
  */
-export default class Doctor extends Person {
+export default class Doctor extends Schedulable(Person) {
   #department;
   #fee;
   #photo;
