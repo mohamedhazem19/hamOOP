@@ -1,17 +1,36 @@
-/* Owner: Belal Mohamed Ahmed (GUI general) – phone layout */
-@media (max-width:900px){
-  .hero,.about,.why{grid-template-columns:1fr!important}
-  .dept-grid,.numbers,.why-grid{grid-template-columns:repeat(2,1fr)!important}
+/* Owner: Belal Mohamed Ahmed (GUI general) – phone layout
+   Rules that help EVERY screen on phones and touch screens. Each screen's own CSS
+   (home.css, booking.css, stats.css …) still handles its own grid; this file only adds
+   what all of them need, using the real class names from our app. */
+
+/* Touch screens have no hover: don't leave cards "lifted" after a tap (animations.css). */
+@media (hover: none) {
+  .card:hover, .lift:hover { transform: none; box-shadow: none; }
 }
-@media (max-width:720px){
-  .app,.layout{display:block!important}
-  .sidebar{width:100%!important;position:static!important;display:flex;flex-wrap:wrap;gap:6px;padding:10px}
-  table{display:block;overflow-x:auto;white-space:nowrap;max-width:100%}
-  .topbar-links{display:none}
-  .hero h1{font-size:2.1rem!important}
-  .cta{flex-direction:column;text-align:center}
+
+@media (max-width: 860px) {
+  /* Long names or e-mails wrap instead of pushing the page wider than the phone. */
+  .app h1, .app h2, .app p, .app td, .app label { overflow-wrap: anywhere; }
+  .app img, .app svg { max-width: 100%; height: auto; }
 }
-@media (max-width:480px){
-  .dept-grid,.numbers,.why-grid{grid-template-columns:1fr!important}
-  .modal-box{border-radius:14px;padding:16px}
+
+@media (max-width: 720px) {
+  /* 16px text in fields stops iPhones from zooming in when you tap a field. */
+  .app input, .app select, .app textarea { font-size: 16px; }
+
+  /* Dialogs become a sheet at the bottom of the screen, easy to reach with a thumb. */
+  .modal-backdrop { align-items: flex-end; padding: 0; }
+  .modal-box { max-width: none !important; border-radius: 20px 20px 0 0; max-height: 88vh; }
+  .modal-box > .cd { border-radius: 20px 20px 0 0; padding-bottom: 28px; }
+
+  /* Messages use the full width at the top. */
+  #toast-root { top: 10px; width: calc(100vw - 20px); }
+}
+
+@media (max-width: 480px) {
+  .modal-box { padding: 16px; }
+  .modal-box:has(> .cd) { padding: 0; }
+  /* Buttons in a row of actions stack and fill the width, so they are easy to tap. */
+  .cd__actions { flex-direction: column-reverse; }
+  .cd__actions .ap-btn { width: 100%; }
 }
