@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Doctor portrait">
+  <rect width="128" height="128" rx="64" fill="#fbf4ea"/>
+  <path d="M20 128c2-26 20-40 44-40s42 14 44 40z" fill="#ffffff"/>
+  <path d="M52 90l12 18 12-18" fill="none" stroke="#2f9e74" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M20 128c2-22 14-34 30-38l4 38zM108 128c-2-22-14-34-30-38l-4 38z" fill="#2f9e74" opacity="0.18"/>
+  <rect x="56" y="74" width="16" height="16" rx="6" fill="#a8724f"/>
+  <ellipse cx="64" cy="56" rx="22" ry="25" fill="#a8724f"/>
+  <path d="M38 54c0-18 12-30 26-30s26 12 26 30c0 4-1 6-2 8l-4-10c-6 2-14 2-20-2-6 4-14 4-20 2l-4 10c-1-2-2-4-2-8z" fill="#2b211c"/>
+  <circle cx="56" cy="58" r="2.2" fill="#2b2b2b"/><circle cx="72" cy="58" r="2.2" fill="#2b2b2b"/>
+  <path d="M58 68c4 3 8 3 12 0" fill="none" stroke="#2b2b2b" stroke-width="2" stroke-linecap="round"/>
+  <path d="M42 104c0 8 6 12 12 12" fill="none" stroke="#2f9e74" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="54" cy="116" r="3.5" fill="#2f9e74"/>
+</svg>
