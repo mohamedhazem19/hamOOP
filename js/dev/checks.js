@@ -4,12 +4,14 @@
 // Each teammate adds a section for their own controller at the bottom.
 
 import DataStore from '../store/DataStore.js';
-import { createSampleData } from '../store/sampleData.js';
+import { createSampleData, isoDate } from '../store/sampleData.js';
 import session from '../session.js';
 import Router from '../router.js';
 import AuthController from '../controllers/AuthController.js';
 import PatientController from '../controllers/PatientController.js';
-import StatsController from '../controllers/StatsController.js';
+import AppointmentController from '../controllers/AppointmentController.js';
+import SlotUnavailableError from '../errors/SlotUnavailableError.js';
+import InvalidInputError from '../errors/InvalidInputError.js';
 
 const results = [];
 class Waiting extends Error {}
@@ -116,30 +118,136 @@ check('Router: a screen that is not built yet shows a friendly page', () => {
 // Lojaine (PatientController) · Rodina (DoctorController) · Malak (AppointmentController)
 // Loay (ReportController) · Wagdy & Belal (StatsController)
 
-// ---------- Wagdy & Belal: StatsController ----------
-check('Stats: revenue counts completed visits only (sample data = 1,400 EGP)', () => {
+// ---------- Malak: AppointmentController (book, cancel, freeSlots) ----------
+// Sample data: today d1 is booked at 09:00 (a1, Karim) and 10:30 (a4, Hana); Youssef (p1) has a6 with d3 in 3 days at 10:30.
+function bookingSetup() {
   const { store } = fresh();
-  const stats = new StatsController(store);
-  assert(stats.revenue() === 1400, `revenue was ${stats.revenue()}`);
-  const sum = stats.summary();
-  assert(sum.completed === 4 && sum.upcoming === 6 && sum.cancelled === 1, 'completed 4, upcoming 6, cancelled 1');
-  assert(sum.total === 10, 'total = scheduled + completed (cancelled not counted)');
+  // Keep the clock at 08:00 so today's 09:00+ slots remain future during these checks.
+  const todayAtEight = new Date(); todayAtEight.setHours(8, 0, 0, 0);
+  return { store, ac: new AppointmentController(store, () => new Date(todayAtEight)) };
+}
+
+/** Runs fn and returns the error it throws (or null), so a check can look at the error's class. */
+function errorOf(fn) {
+  try { fn(); } catch (e) { return e; }
+  return null;
+}
+const slotState = (ac, doctorId, date) => ac.freeSlots(doctorId, date).map((s) => `${s.time}:${s.free ? 'free' : s.reason}`).join(' ');
+
+check('freeSlots(): returns the 8 slots 09:00–12:30 (every 30 min) for a free day', () => {
+  const { ac } = bookingSetup();
+  const slots = ac.freeSlots('d1', isoDate(2));
+  assert(slots.map((s) => s.time).join() === '09:00,09:30,10:00,10:30,11:00,11:30,12:00,12:30', 'slot times');
+  assert(slots.every((s) => s.free === true && s.reason === ''), 'a day without appointments is completely free');
 });
-check('Stats: one row per doctor and per department', () => {
-  const { store } = fresh();
-  const stats = new StatsController(store);
-  const d1 = stats.perDoctor().find((r) => r.doctor.id === 'd1');
-  assert(d1.total === 4 && d1.completed === 2 && d1.revenue === 800, 'Dr. Ahmed Fathy: 4 visits, 2 completed, 800 EGP');
-  const depts = stats.perDepartment();
-  assert(depts.length === 4 && depts.every((r) => r.doctors === 1), '4 departments, 1 doctor each');
-  assert(depts.reduce((t, r) => t + r.revenue, 0) === stats.revenue(), 'departments add up to the revenue');
+check('freeSlots(): marks the doctor\'s booked slots as Booked and leaves the rest free', () => {
+  const { ac } = bookingSetup();
+  assert(slotState(ac, 'd1', isoDate(0)) === '09:00:Booked 09:30:free 10:00:free 10:30:Booked 11:00:free 11:30:free 12:00:free 12:30:free', slotState(ac, 'd1', isoDate(0)));
+  assert(ac.freeSlots('d2', isoDate(0)).filter((s) => !s.free).map((s) => s.time).join() === '10:00', 'another doctor has only 10:00 taken');
 });
-check('Stats: a cancelled visit never adds revenue', () => {
-  const { store } = fresh();
-  const stats = new StatsController(store);
-  const before = stats.revenue();
-  store.appointments.find((a) => a.id === 'a1').cancel('Patient request');
-  assert(stats.revenue() === before && stats.summary().cancelled === 2);
+check('freeSlots(): a cancelled appointment frees its slot, a completed one keeps it taken', () => {
+  const { ac } = bookingSetup();
+  ac.cancel('a1', 'Doctor not available');
+  assert(ac.freeSlots('d1', isoDate(0))[0].free, '09:00 is free again after cancel');
+  ac.complete('a4');
+  assert(!ac.freeSlots('d1', isoDate(0))[3].free, '10:30 stays taken after complete');
+});
+check('freeSlots(): a past date has no free slots; an unknown doctor or a bad date is refused', () => {
+  const { ac } = bookingSetup();
+  assert(ac.freeSlots('d1', isoDate(-1)).every((s) => !s.free && s.reason === 'Past date'), 'yesterday is closed');
+  assert(errorOf(() => ac.freeSlots('nope', isoDate(1))) instanceof InvalidInputError, 'unknown doctor');
+  assert(errorOf(() => ac.freeSlots('d1', '2026-02-31')) instanceof InvalidInputError, 'impossible date');
+  assert(errorOf(() => ac.freeSlots('d1', 'tomorrow')) instanceof InvalidInputError, 'not a date');
+});
+check('freeSlots(): a day off closes every slot (uses the doctor\'s isAvailable)', () => {
+  const { store, ac } = bookingSetup();
+  needs(typeof store.findDoctor('d2').addOffDay === 'function', 'Rodina: Doctor.addOffDay()');
+  store.findDoctor('d2').addOffDay(isoDate(4));
+  assert(ac.freeSlots('d2', isoDate(4)).every((s) => !s.free && s.reason === 'Doctor not available'));
+  assert(ac.freeSlots('d2', isoDate(5)).every((s) => s.free), 'the next day is still free');
+});
+
+check('book(): a free slot is booked, becomes taken, and shows up in all() and forPatient()', () => {
+  const { ac } = bookingSetup();
+  const a = ac.book('p1', 'd1', isoDate(2), '09:00');
+  assert(a.isScheduled && a.patientId === 'p1' && a.doctorId === 'd1' && a.time === '09:00');
+  assert(ac.all({ date: isoDate(2) }).length === 1 && ac.forPatient('p1').includes(a), 'stored');
+  assert(!ac.freeSlots('d1', isoDate(2))[0].free, 'slot is now taken');
+});
+check('book(): an already taken slot is rejected with SlotUnavailableError and nothing is saved', () => {
+  const { ac } = bookingSetup();
+  const before = ac.all().length;
+  const e = errorOf(() => ac.book('p1', 'd1', isoDate(0), '09:00')); // a1 already holds d1 today 09:00
+  assert(e instanceof SlotUnavailableError, `expected SlotUnavailableError, got ${e?.name}`);
+  assert(e.who === 'doctor' && e.message.length > 0, 'the message says who is busy');
+  assert(ac.all().length === before, 'no appointment was added');
+});
+check('book(): booking the same slot twice – the second try is rejected', () => {
+  const { ac } = bookingSetup();
+  ac.book('p1', 'd2', isoDate(2), '11:00');
+  assert(errorOf(() => ac.book('p2', 'd2', isoDate(2), '11:00')) instanceof SlotUnavailableError, 'second patient, same doctor and time');
+});
+check('book(): the same patient cannot have two appointments at the same date and time', () => {
+  const { ac } = bookingSetup();
+  const e = errorOf(() => ac.book('p1', 'd1', isoDate(3), '10:30')); // p1 already has a6 (d3) then
+  assert(e instanceof SlotUnavailableError && e.who === 'patient', `got ${e?.name}`);
+});
+check('book(): past dates, bad times, unknown people are refused and nothing is saved', () => {
+  const { ac } = bookingSetup();
+  const before = ac.all().length;
+  assert(errorOf(() => ac.book('p1', 'd2', isoDate(-1), '09:00')) instanceof InvalidInputError, 'past date');
+  assert(errorOf(() => ac.book('p1', 'd2', isoDate(1), '13:00')) instanceof InvalidInputError, 'time outside the slots');
+  assert(errorOf(() => ac.book('p1', 'd2', isoDate(1), '09:15')) instanceof InvalidInputError, 'time between slots');
+  assert(errorOf(() => ac.book('nobody', 'd2', isoDate(1), '09:00')) instanceof InvalidInputError, 'unknown patient');
+  assert(errorOf(() => ac.book('p1', 'nobody', isoDate(1), '09:00')) instanceof InvalidInputError, 'unknown doctor');
+  assert(ac.all().length === before, 'nothing saved');
+});
+
+check('book(): rejects a slot whose time has already passed today', () => {
+  const { store } = bookingSetup();
+  const todayAtTenFifteen = new Date(); todayAtTenFifteen.setHours(10, 15, 0, 0);
+  const ac = new AppointmentController(store, () => new Date(todayAtTenFifteen));
+  assert(errorOf(() => ac.book('p1', 'd4', isoDate(0), '09:30')) instanceof InvalidInputError, '09:30 has passed');
+  assert(errorOf(() => ac.book('p1', 'd4', isoDate(0), '10:00')) instanceof InvalidInputError, '10:00 has passed');
+});
+check('book(): still accepts a future slot later today', () => {
+  const { store } = bookingSetup();
+  const todayAtTenFifteen = new Date(); todayAtTenFifteen.setHours(10, 15, 0, 0);
+  const ac = new AppointmentController(store, () => new Date(todayAtTenFifteen));
+  const appointment = ac.book('p1', 'd4', isoDate(0), '11:00');
+  assert(appointment.isScheduled && appointment.time === '11:00', 'future slot booked');
+});
+check('freeSlots(): marks earlier slots today as Past time and leaves future slots available', () => {
+  const { store } = bookingSetup();
+  const todayAtTenFifteen = new Date(); todayAtTenFifteen.setHours(10, 15, 0, 0);
+  const ac = new AppointmentController(store, () => new Date(todayAtTenFifteen));
+  const slots = ac.freeSlots('d4', isoDate(0));
+  assert(['09:00', '09:30', '10:00'].every((t) => slots.find((s) => s.time === t)?.reason === 'Past time'), 'earlier slots closed');
+  assert(slots.find((s) => s.time === '11:00')?.free === true, 'future slot remains free');
+});
+
+check('cancel(): stores the status and the reason', () => {
+  const { ac } = bookingSetup();
+  const a = ac.cancel('a6', 'Hospital emergency');
+  assert(a.isCancelled && a.cancelReason === 'Hospital emergency');
+  assert(ac.all({ status: 'Cancelled' }).some((x) => x.id === 'a6'), 'visible through all({ status })');
+});
+check('cancel(): frees the slot so another patient can book it', () => {
+  const { ac } = bookingSetup();
+  assert(errorOf(() => ac.book('p1', 'd1', isoDate(0), '09:00')) instanceof SlotUnavailableError, 'taken before the cancel');
+  ac.cancel('a1', 'Patient request');
+  const again = ac.book('p1', 'd1', isoDate(0), '09:00');
+  assert(again.isScheduled && again.patientId === 'p1', 'p1 can now book the cancelled slot');
+  assert(!ac.freeSlots('d1', isoDate(0))[0].free, 'and the slot is taken again');
+});
+check('cancel(): needs a reason, and a cancelled or completed appointment cannot be cancelled', () => {
+  const { ac } = bookingSetup();
+  assert(errorOf(() => ac.cancel('a6', '  ')) instanceof InvalidInputError, 'empty reason');
+  assert(ac.all().find((a) => a.id === 'a6').isScheduled, 'still scheduled after the refused cancel');
+  ac.cancel('a6', 'Other');
+  assert(errorOf(() => ac.cancel('a6', 'Other')) instanceof InvalidInputError, 'cancel twice');
+  assert(errorOf(() => ac.cancel('a7', 'Other')) instanceof InvalidInputError, 'a7 is already completed');
+  assert(errorOf(() => ac.cancel('zzz', 'Other')) instanceof InvalidInputError, 'unknown id');
 });
 
 session.end();
