@@ -10,6 +10,7 @@ import Router from '../router.js';
 import AuthController from '../controllers/AuthController.js';
 import PatientController from '../controllers/PatientController.js';
 import StatsController from '../controllers/StatsController.js';
+import ReportController from '../controllers/ReportController.js';
 
 const results = [];
 class Waiting extends Error {}
@@ -140,6 +141,34 @@ check('Stats: a cancelled visit never adds revenue', () => {
   const before = stats.revenue();
   store.appointments.find((a) => a.id === 'a1').cancel('Patient request');
   assert(stats.revenue() === before && stats.summary().cancelled === 2);
+});
+
+// ---------- Loay: ReportController ----------
+check('Reports: completed visits without a report are waiting (sample data = a7, a8)', () => {
+  const { store } = fresh();
+  const reports = new ReportController(store);
+  const ids = reports.waitingForReport().map((a) => a.id).sort();
+  assert(ids.join(',') === 'a7,a8', `waiting: ${ids.join(',')}`);
+  assert(reports.forAppointment('a10')?.id === 'r1' && reports.forAppointment('a7') === null);
+  assert(reports.forPatient('p1').map((r) => r.id).join(',') === 'r1,r2', 'p1 has r1 and r2, newest first');
+});
+check('Reports: publish needs a completed visit, a title and a diagnosis', () => {
+  const { store } = fresh();
+  const reports = new ReportController(store);
+  throwsError(() => reports.publish('a1', { title: 'x', diagnosis: 'y' }), 'a1 is not completed');
+  throwsError(() => reports.publish('a7', { title: 'Check-up', diagnosis: '' }), 'empty diagnosis');
+  throwsError(() => reports.publish('a10', { title: 'Again', diagnosis: 'y' }), 'a10 already has a report');
+  assert(store.reports.length === 2, 'nothing was stored');
+});
+check('Reports: publish stores the report and the visit stops waiting', () => {
+  const { store } = fresh();
+  const reports = new ReportController(store);
+  const r = reports.publish('a7', { title: 'Heart follow-up', diagnosis: 'Stable',
+    prescriptions: [{ medicine: 'Aspirin 81 mg', how: 'Once daily' }, { medicine: '' }],
+    scans: [{ type: 'ecg', name: 'ECG – follow-up' }] });
+  assert(store.reports.length === 3 && reports.forAppointment('a7') === r);
+  assert(r.prescriptions.length === 1 && r.scanCount === 1, 'empty medicine row dropped, scan kept');
+  assert(!reports.waitingForReport().some((a) => a.id === 'a7'));
 });
 
 session.end();
