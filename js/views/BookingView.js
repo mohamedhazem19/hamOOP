@@ -7,7 +7,6 @@
 import AppointmentView from './AppointmentView.js';
 import { esc } from './common/BaseView.js';
 import SlotUnavailableError from '../errors/SlotUnavailableError.js';
-import Appointment from '../models/Appointment.js';
 
 export default class BookingView extends AppointmentView {
   #choice;
@@ -17,22 +16,13 @@ export default class BookingView extends AppointmentView {
     this.rescheduling = this.params.rescheduleId ? this.#findAppointment(this.params.rescheduleId) : null;
     const doctorId = this.rescheduling?.doctorId || this.params.doctorId || '';
     const doctor = this.#doctorById(doctorId) || this.#doctorList(this.#departments()[0])[0];
-    const wanted = this.rescheduling?.date || this.params.date || this.#firstOpenDay();
+    const wanted = this.rescheduling?.date || this.params.date || this.today;
     this.#choice = {
       dept: doctor?.department || this.#departments()[0] || '',
       doctorId: doctor?.id || '',
       date: wanted < this.today ? this.today : wanted,
       time: '',
     };
-  }
-
-  /** Today, or tomorrow once the last time slot of today has already passed. */
-  #firstOpenDay() {
-    const now = new Date();
-    const time = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-    if (time < Appointment.SLOTS.at(-1)) return this.today;
-    const next = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-    return `${next.getFullYear()}-${String(next.getMonth() + 1).padStart(2, '0')}-${String(next.getDate()).padStart(2, '0')}`;
   }
 
   get title() { return 'Book Appointment'; }
@@ -103,7 +93,6 @@ export default class BookingView extends AppointmentView {
               ${slots.map((s) => this.#slotButton(s)).join('')}
             </div>
             ${off ? '<p class="ap-note ap-note--warn">This doctor is not available on this day. Please choose another date.</p>' : ''}
-            ${!off && slots.length && slots.every((s) => s.reason === 'Past time') ? '<p class="ap-note ap-note--warn">All of today\'s time slots have passed. Please choose another date.</p>' : ''}
             <p class="ap-muted ap-small">Crossed-out slots are already booked for this doctor.</p>
           </div>
         </section>
@@ -133,7 +122,7 @@ export default class BookingView extends AppointmentView {
   #slotButton(slot) {
     const selected = this.#choice.time === slot.time && slot.free;
     const cls = ['bk__slot', selected ? 'is-selected' : '', slot.free ? '' : 'is-taken'].filter(Boolean).join(' ');
-    const labels = { Booked: 'Booked', 'Past date': 'Past', 'Past time': 'Past' };
+    const labels = { Booked: 'Booked', 'Past date': 'Past' };
     const note = slot.free ? '' : `<span class="bk__slot-note">${labels[slot.reason] || 'Off'}</span>`;
     return `<button type="button" class="${cls}" data-time="${esc(slot.time)}" aria-pressed="${selected}" ${slot.free ? '' : 'disabled'}>${esc(slot.time)}${note}</button>`;
   }
