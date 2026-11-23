@@ -16,10 +16,28 @@ import DoctorUnavailableError from '../errors/DoctorUnavailableError.js';
 
 export default class AppointmentController {
   #store;
+  #now;
 
-  /** @param {DataStore} store  the shared store (the app passes nothing, so the singleton is used) */
-  constructor(store = DataStore.instance) {
+  /** @param {DataStore} store shared store @param {Function} now clock provider (injectable for tests) */
+  constructor(store = DataStore.instance, now = () => new Date()) {
     this.#store = store;
+    this.#now = now;
+  }
+
+  #today() {
+    const now = this.#now();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    return `${now.getFullYear()}-${mm}-${dd}`;
+  }
+
+  #currentTime() {
+    const now = this.#now();
+    return `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+  }
+
+  #isPastSlot(date, time) {
+    return date === this.#today() && time <= this.#currentTime();
   }
 
   // =====================================================================
@@ -62,11 +80,12 @@ export default class AppointmentController {
   freeSlots(doctorId, date) {
     const doctor = this.#doctor(doctorId);
     const day = Appointment.checkDate(date);
-    const past = day < isoDate(0);
+    const past = day < this.#today();
     const off = this.#isOff(doctor, day);
     return Appointment.SLOTS.map((time) => {
       if (past) return { time, free: false, reason: 'Past date' };
       if (off) return { time, free: false, reason: 'Doctor not available' };
+      if (this.#isPastSlot(day, time)) return { time, free: false, reason: 'Past time' };
       const taken = this.#doctorHas(doctorId, day, time);
       return { time, free: !taken, reason: taken ? 'Booked' : '' };
     });
@@ -166,7 +185,8 @@ export default class AppointmentController {
     const doctor = this.#doctor(doctorId);
     const day = Appointment.checkDate(date);
     const slot = Appointment.checkTime(time);
-    if (day < isoDate(0)) throw new InvalidInputError('You cannot book a date in the past.');
+    if (day < this.#today()) throw new InvalidInputError('You cannot book a date in the past.');
+    if (this.#isPastSlot(day, slot)) throw new InvalidInputError('You cannot book a time that has already passed.');
     if (this.#isOff(doctor, day)) {
       throw new DoctorUnavailableError(`${doctor.name} is not available on this day. Please choose another date.`);
     }
